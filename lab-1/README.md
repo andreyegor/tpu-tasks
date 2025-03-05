@@ -1,4 +1,4 @@
-# [Вывод данных консоль](tps://docs.google.com/document/d/1gHzh7d4nUPzcDFTUviu_FvX_9Sp9AzlI4X89pU7D5P0/edit?tab=t.0#heading=h.hvdz6ln2bwxi)
+# [Вывод данных консоль](https://docs.google.com/document/d/1gHzh7d4nUPzcDFTUviu_FvX_9Sp9AzlI4X89pU7D5P0/edit?tab=t.0#heading=h.hvdz6ln2bwxi)
 
 ## Вариант 0
 

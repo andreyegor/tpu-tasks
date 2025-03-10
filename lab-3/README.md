@@ -1,4 +1,4 @@
-# Структуры данных
+# [Структуры данных](https://docs.google.com/document/d/1jyVmYu8LrDwvdYXDIJsr5oSSq-djsr5BCh22pQv7Nmc/edit?tab=t.0#heading=h.v6orbgrzbv80)
 
 ## Задачи
 

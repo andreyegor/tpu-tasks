@@ -36,7 +36,7 @@ class MainLab2 {
         // table_size = 11;
         // steps_count = 100000;
 
-        double round_factor = 10000;//5 after point
+        double round_factor = 10000; // 5 after point
         double[][] table = tableOfValues((x) -> a * x * x + b * x + c, x_from, x_to, table_size, steps_count);
         double[][] table_rounded = Arrays.stream(table)
                 .map(line -> Arrays.stream(line).map(n -> (Math.round(n * round_factor) / round_factor)).toArray())
@@ -70,7 +70,7 @@ class MainLab2 {
         return out;
     }
 
-    // Принимает интерфейс как параметр,
+    // Принимает функциональный(!) интерфейс как параметр,
     // https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html
     private static double integration(DoubleUnaryOperator f, double from, double to, int steps) {
         double step = (to - from) / steps;// тут ошибка будет наверное
@@ -86,20 +86,21 @@ class MainLab2 {
         return out;
 
     }
+    // Фунция интегрирования написанная согласно условию задачи.
+    // В решении использую вместо неё более, по моему мнению, корректную.
+    // private static double integration(int a, int b, int c, int from, int to, int steps) {
+    //     double step = (to - from) / steps + to > 0 && from < 0 ? 1 : 0;
+    //     double out = 0;
+    //     for (int i = 0; i < steps; i++) {
+    //         double xf = from + i * step;
+    //         double xt = from + (i + 1) * step;
+    //         double yf = a * xf * xf + b * xf + c;
+    //         double yt = a * xt * xt + b * xt + c;
 
-    private static double integrationabc(int a, int b, int c, int from, int to, int steps) {
-        double step = (to - from) / steps + to > 0 && from < 0 ? 1 : 0;
-        double out = 0;
-        for (int i = 0; i < steps; i++) {
-            double xf = from + i * step;
-            double xt = from + (i + 1) * step;
-            double yf = a * xf * xf + b * xf + c;
-            double yt = a * xt * xt + b * xt + c;
-
-            out += (yf + yt) * step / 2;
-        }
-        return out;
-    }
+    //         out += (yf + yt) * step / 2;
+    //     }
+    //     return out;
+    // }
 
     // private static double exactIntegration(int a, int b, int c, int x_from, int
     // x_to, int steps_count) {

@@ -129,12 +129,12 @@ class MainLab2 {
         String last_horizontal_delimiter = horizontalDelimiter('└', '┴', '┘', widths) + '\n';
         String vertical_line_delimiter = "│";
 
-        String[] textCellFormat = Arrays.stream(widths)
+        String[] cell_format = Arrays.stream(widths)
                 .mapToObj((w) -> String.format("%%%ds", w)).toArray(String[]::new);
         StringBuilder out = new StringBuilder(first_horizontal_delimiter);
         for (int i = 0; i < heights.length; i++) {
             for (int j = 0; j < widths.length; j++) {
-                out.append(vertical_line_delimiter).append(String.format(textCellFormat[j], data[i][j]));
+                out.append(vertical_line_delimiter).append(String.format(cell_format[j], data[i][j]));
             }
             out.append(vertical_line_delimiter).append('\n');
             if (i != data.length - 1)

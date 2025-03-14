@@ -47,7 +47,7 @@ namespace lab_11
             {
                 star.y += star.speed;
             }
-            stars = stars.Where(star => star.x > 0 && star.y > 0&& star.x<ClientSize.Width&&star.y<ClientSize.Height&& r.Next(1,100)>1).ToList();
+            stars = stars.Where(star => star.x > 0 && star.y > 0&& star.x<ClientSize.Width&&star.y<ClientSize.Height&& r.Next(1,1000)>1).ToList();
             stars.AddRange(GenerateStars(Math.Max(0, StarsToExist() - stars.Count)));
             this.Refresh();
         }

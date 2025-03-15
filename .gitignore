@@ -1,4 +1,10 @@
 .vs/
-bin/
+.vscode/
+.metals/
+.scala-build/
+.bsp/
+
 obj/
+bin/
+
 *.odt

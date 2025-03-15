@@ -58,12 +58,13 @@ namespace lab_11
             var r = new Random();
             for (int i = 0; i < count; i++)
             {
+                int radius = r.Next(2, 5);
                 stars.Add(new Star
                 {
-                    x = r.Next(ClientSize.Width),
-                    y = r.Next(ClientSize.Height),
+                    x = r.Next(ClientSize.Width + radius) - radius,
+                    y = r.Next(ClientSize.Height + radius) - radius,
                     speed = r.Next(1, 5),
-                    size = r.Next(2, 5),
+                    size = radius,
                     color = Color.White
                 });
             }

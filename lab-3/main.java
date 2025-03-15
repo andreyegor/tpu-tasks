@@ -32,12 +32,12 @@ class MainLab3 {
         int getAllSize = 30_000;
 
         String add2HeadLabel = String.format("Add %s to head", Table.beautifulInteger(add2HeadSize));
-        String add2MidLabel = String.format("Add %s to Mid", Table.beautifulInteger(add2MidSize));
-        String add2EndLabel = String.format("Add %s to End", Table.beautifulInteger(add2EndSize));
-        String rmvFHeadLabel = String.format("Remove %s from Head", Table.beautifulInteger(rmvFHeadSize));
-        String rmvFMidLabel = String.format("Remove %s from Mid", Table.beautifulInteger(rmvFMidSize));
-        String rmvFEndLabel = String.format("Remove %s from End", Table.beautifulInteger(rmvFEndSize));
-        String getAllLabel = String.format("Get All %s", Table.beautifulInteger(getAllSize));
+        String add2MidLabel = String.format("Add %s to mid", Table.beautifulInteger(add2MidSize));
+        String add2EndLabel = String.format("Add %s to end", Table.beautifulInteger(add2EndSize));
+        String rmvFHeadLabel = String.format("Remove %s from head", Table.beautifulInteger(rmvFHeadSize));
+        String rmvFMidLabel = String.format("Remove %s from mid", Table.beautifulInteger(rmvFMidSize));
+        String rmvFEndLabel = String.format("Remove %s from end", Table.beautifulInteger(rmvFEndSize));
+        String getAllLabel = String.format("Get all %s", Table.beautifulInteger(getAllSize));
 
         // .boxed() оборачивает IntStream в Stream
         List<Integer> rmvFHeadData = IntStream.range(0, rmvFHeadSize)
@@ -351,7 +351,7 @@ class Table {
         StringBuilder out = new StringBuilder();
         for (int i = 0; i < ln; i++) {
             out.append(ns.charAt(i));
-            if ((ln - i) % 3 == 0)
+            if ((ln - i - 1) % 3 == 0 && ln-i != 1)
                 out.append('_');
         }
         return out.toString();

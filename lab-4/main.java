@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -23,8 +24,8 @@ class MainLab4 {
             System.out.println("Что-то пошло не так при чтении файла");
             return;
         }
-
-        System.out.println(Plot.generate(data, false, false, true));
+        var onlyAlphabetData = onlyAlphabet(data);
+        System.out.println(Plot.generate(data, true, false, false));
     }
 
     private static HashMap<String, Integer> openAndCount(String path) throws IOException {
@@ -33,6 +34,15 @@ class MainLab4 {
         br.close();
         return out;
 
+    }
+
+    private static HashMap<String, Integer> onlyAlphabet(HashMap<String, Integer> data) {
+        var p = Pattern.compile("[A-ZА-Яa-zа-я]");
+        var out = new HashMap<String, Integer>();
+        for (var entry : data.entrySet())
+            if (p.matcher(entry.getKey()).matches())
+                out.put(entry.getKey(), entry.getValue());
+        return out;
     }
 }
 
@@ -85,7 +95,7 @@ class Plot {
     public static String generate(HashMap<String, Integer> data,
             boolean isHorisontal, boolean sortDescending, boolean sortByCount) {
         var sortedData = sortByCount ? sortByCount(data, sortDescending) : sortAlphabetically(data, sortDescending);
-        return isHorisontal ? "" : generateVertical(sortedData, 80);
+        return isHorisontal ? generateHorisontal(sortedData, 20) : generateVertical(sortedData, 80);
     }
 
     private static String generateVertical(ArrayList<Map.Entry<String, Integer>> data, int width) {
@@ -99,7 +109,7 @@ class Plot {
         var sb = new StringBuilder();
         sb.append(horisontalBorder('┌', '┬', '┐', maxLabelWidth, maxBarWidth));
 
-        double valueDivider = (maxCount/(maxBarWidth - 1));
+        double valueDivider = (maxCount / (maxBarWidth - 1));
         for (Map.Entry<String, Integer> lineData : data)
             sb.append(String.format(lineTemplate, lineData.getKey(), lineData.getValue(),
                     "█".repeat(1 + (int) (lineData.getValue() / valueDivider))));
@@ -109,11 +119,48 @@ class Plot {
         return sb.toString();
     }
 
+    private static String generateHorisontal(ArrayList<Map.Entry<String, Integer>> data, int height) {
+        int maxCount = data.stream().map(e -> e.getValue()).max((a, b) -> a - b).orElse(0);
+        int maxCountWidth = String.valueOf(maxCount).length();
+        int maxBarHeight = height - 3;
+
+        var spreadedCounts = new int[maxBarHeight];
+        for (int i = 0; i < maxBarHeight; i++)
+            spreadedCounts[i] = (int) Math.ceil(maxCount * (i + 1) / (double) maxBarHeight);
+
+        var spreadedCountsText = new String[maxBarHeight];
+        spreadedCountsText[maxBarHeight - 1] = String.valueOf(spreadedCounts[maxBarHeight - 1]);
+        for (int i = maxBarHeight - 2; i >= 0; i--) {
+            if (spreadedCounts[i] == spreadedCounts[i + 1])
+                spreadedCountsText[i] = "";
+            else
+                spreadedCountsText[i] = String.valueOf(spreadedCounts[i]);
+        }
+
+        var halfLineTemplate = String.format("│%%%ds│", maxCountWidth);
+
+        var sb = new StringBuilder();
+        sb.append(horisontalBorder('┌', '┬', '┐', String.format(halfLineTemplate, "").length(), data.size()));
+        for (int i = maxBarHeight - 1; i >= 0; i--) {
+            sb.append(String.format(halfLineTemplate, spreadedCountsText[i]));
+            for (Map.Entry<String, Integer> entry : data)
+                sb.append((i == 0 || spreadedCounts[i] <= entry.getValue()) ? "█" : " ");
+            sb.append("│\n");
+        }
+
+        sb.append(String.format(halfLineTemplate, ""));
+        data.forEach(e -> sb.append(e.getKey()));
+        sb.append("│\n");
+        sb.append(horisontalBorder('└', '┴', '┘', String.format(halfLineTemplate, "").length(), data.size()));
+
+        return sb.toString();
+    }
+
     private static ArrayList<Map.Entry<String, Integer>> sortByCount(HashMap<String, Integer> data, boolean reverse) {
         int k = reverse ? -1 : 1;
         var enteries = new ArrayList<>(data.entrySet());
         enteries.sort((a, b) -> {
-            int cmp = b.getValue()- a.getValue();
+            int cmp = b.getValue() - a.getValue();
             return k * (cmp == 0 ? a.getKey().compareTo(b.getKey()) : cmp);
         });
         return enteries;
@@ -123,11 +170,11 @@ class Plot {
             boolean reverse) {
         int k = reverse ? -1 : 1;
         var enteries = new ArrayList<>(data.entrySet());
-        enteries.sort((a, b) -> k*a.getKey().compareTo(b.getKey()));
+        enteries.sort((a, b) -> k * a.getKey().compareTo(b.getKey()));
         return enteries;
     }
 
-    private static String horisontalBorder(char l, char m, char r, int lw, int rw){
-        return l + "─".repeat(lw-2) + m + "─".repeat(rw)+r+'\n';
+    private static String horisontalBorder(char l, char m, char r, int lw, int rw) {
+        return l + "─".repeat(lw - 2) + m + "─".repeat(rw) + r + '\n';
     }
 }

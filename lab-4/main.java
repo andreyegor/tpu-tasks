@@ -24,6 +24,7 @@ class MainLab4 {
             System.out.println("Что-то пошло не так при чтении файла");
             return;
         }
+        @SuppressWarnings("unused")
         var onlyAlphabetData = onlyAlphabet(data);
         System.out.println(Plot.generate(data, true, false, false));
     }

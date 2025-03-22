@@ -63,7 +63,7 @@ namespace lab_11
                 {
                     x = r.Next(ClientSize.Width + radius) - radius,
                     y = r.Next(ClientSize.Height + radius) - radius,
-                    speed = r.Next(1, 5),
+                    speed = r.Next(1, 25),
                     size = radius,
                     color = Color.White
                 });

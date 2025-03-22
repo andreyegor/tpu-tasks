@@ -27,16 +27,16 @@ namespace lab_6
             String line = listBox1.Items[selected]?.ToString() ?? "";
 
             int real_i = -1, real_j = -1;
-            int real_k = 0;
-            for (int k=0; k<line.Length; k++)
+            int k = 0;
+            for (int real_k=0; real_k<line.Length; real_k++)
             {
-                if (line[k] == ' ')
+                if (line[real_k] == ' ')
                     continue;
-                else if (real_k == i)
-                    real_i = k;
-                else if (real_k == j)
-                    real_j = k;
-                real_k++;
+                else if (k == i)
+                    real_i = real_k;
+                else if (k == j)
+                    real_j = real_k;
+                k++;
             }
             if (real_i == -1 || real_j == -1)
                 return;

@@ -15,13 +15,9 @@ namespace lab_1
         //click event для всех кнопок
         private void anyButton_Click(object sender, EventArgs e) {
             //пробуем корректно привести object к button
-            if (!(sender is Button))
-                return;
-            var btn = sender as Button;
-            if (btn == null)
-                return;
-            textBox1.Clear();
-            textBox1.AppendText(btn.Text);
+            //if (!(sender is Button))
+            //    return;
+            textBox1.Text = (sender as Button).Text;
         }
     }
 }

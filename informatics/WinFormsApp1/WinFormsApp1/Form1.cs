@@ -18,7 +18,7 @@ namespace WinFormsApp1
         {
             g.DrawEllipse(Pens.Blue, parent.X - radius, parent.Y - radius, radius * 2, radius * 2);
 
-            if (depth >= 4)
+            if (depth >= 2)
                 return;
 
            var r = new Random();

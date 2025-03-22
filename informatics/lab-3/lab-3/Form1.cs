@@ -48,7 +48,7 @@ namespace lab_3
                 {
                     ans = Math.Log(Math.Abs(fx) * Math.Abs(q));
                 }
-                else if (xq == 10)
+                else if (xq < 10)
                 {
                     ans = Math.Exp(fx + q);
                 }

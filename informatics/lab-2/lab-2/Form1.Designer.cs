@@ -129,7 +129,7 @@
             Controls.Add(yTextBox);
             Controls.Add(xTextBox);
             Name = "Form1";
-            Text = "Form1";
+            Text = "8к43 Андреев лаб 2";
             Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();

@@ -51,7 +51,7 @@
             chart1.Legends.Add(legend1);
             chart1.Location = new Point(0, 0);
             chart1.Name = "chart1";
-            chart1.RightToLeft = RightToLeft.Yes;
+            //chart1.RightToLeft = RightToLeft.Yes;
             series1.BorderWidth = 4;
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;

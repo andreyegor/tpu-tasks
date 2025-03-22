@@ -81,7 +81,7 @@
             Controls.Add(plusButton);
             Controls.Add(starButton);
             Name = "Form1";
-            Text = "Form1";
+            Text = "8к43 Андреев лаб 1";
             Load += Form1_Load;
             ResumeLayout(false);
             PerformLayout();

@@ -25,8 +25,8 @@ namespace lab_9
             double[] y = new double[cnt];
             for (int i = 0; i < cnt; i++)
             {
-                x[i] = Round(xMin + step * i);
-                y[i] = Round(f(x[i]));
+                x[i] = Math.Round(xMin + step * i, 3);
+                y[i] = Math.Round(f(x[i]), 3);
             }
 
             chart1.ChartAreas[0].AxisX.Minimum = xMin;
@@ -34,10 +34,6 @@ namespace lab_9
             chart1.ChartAreas[0].AxisX.MajorGrid.Interval = step;
 
             chart1.Series[0].Points.DataBindXY(x, y);
-        }
-
-        private double Round(double x) {
-            return Math.Floor(x * 1000) / 1000;
         }
     }
 }

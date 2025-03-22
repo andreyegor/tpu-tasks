@@ -29,9 +29,11 @@ namespace lab_4
             }
 
             textBox5.AppendText("Выполнил Андреев Е\r\n");
-            for (float x = x0; Math.Abs(x) <= Math.Abs(xk); x = x + dx) {
-                double y = x * Math.Sin(Math.Sqrt(x+b-0.0084));
-                string ans = string.Format("x={0} y={1}\r\n",x,y);
+            double y;
+            string ans;
+            for (float x = x0; Math.Round(Math.Abs(x), 5) <= Math.Abs(xk); x = x + dx) {
+                y = x * Math.Sin(Math.Sqrt(x+b-0.0084));
+                ans = string.Format("x={0} y={1}\r\n",x,y);
                 textBox5.AppendText(ans);
             }
         }

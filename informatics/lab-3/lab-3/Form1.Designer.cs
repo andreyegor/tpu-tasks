@@ -33,7 +33,6 @@
             textBoxAns = new TextBox();
             label1 = new Label();
             label2 = new Label();
-            label3 = new Label();
             buttonRun = new Button();
             buttonClear = new Button();
             radioButton1 = new RadioButton();
@@ -82,15 +81,6 @@
             label2.Size = new Size(96, 25);
             label2.TabIndex = 4;
             label2.Text = "Введите Q";
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new Point(56, 257);
-            label3.Name = "label3";
-            label3.Size = new Size(59, 25);
-            label3.TabIndex = 5;
-            label3.Text = "label3";
             // 
             // buttonRun
             // 
@@ -165,14 +155,13 @@
             Controls.Add(groupBox1);
             Controls.Add(buttonClear);
             Controls.Add(buttonRun);
-            Controls.Add(label3);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(textBoxAns);
             Controls.Add(textBoxQ);
             Controls.Add(textBoxX);
             Name = "Form1";
-            Text = "Form1";
+            Text = "8к43 Андреев лаб 3";
             Load += Form1_Load;
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
@@ -187,7 +176,6 @@
         private TextBox textBoxAns;
         private Label label1;
         private Label label2;
-        private Label label3;
         private Button buttonRun;
         private Button buttonClear;
         private RadioButton radioButton1;

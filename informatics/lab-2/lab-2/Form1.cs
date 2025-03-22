@@ -18,8 +18,8 @@ namespace lab_2
         {
             double t1 = Math.Pow(2.0, -x);
             //nthroot(x) == x^1/n
-            double t2 = (Math.Sqrt(x + Math.Pow(Math.Abs(y), 0.25)));
-            double t3 = (Math.Pow(Math.Exp((x - 1) / Math.Sin(z)), 1.0 / 3.0));
+            double t2 = Math.Sqrt(x + Math.Pow(Math.Abs(y), 0.25));
+            double t3 = Math.Pow(Math.Exp(x- 1 / Math.Sin(z)), 1.0 / 3.0);
             return t1 * t2 * t3;
         }
 
@@ -30,14 +30,13 @@ namespace lab_2
                 double.TryParse(zTextBox.Text, out double z))
             {
                 double a = solvea(x, y, z);
+                a = Math.Round(a, 5);
                 string out_template =
                     "Лаб. раб. N2 гр 8к43 Андреев Е.С.\r\n" +
                     "X={0}\r\nY={1}\r\nZ={2}\r\n" +
                     "Результат A = {3}";
-                Console.WriteLine(out_template);
+
                 outTextBox.Text = string.Format(out_template, x, y, z, a);
-                //Результат на тестовых данных отличается от искомого
-                //Это связанно с особенностями хранения чисел с плавающей точкой
             }
             else {
                 outTextBox.Text = "Ошибка!";

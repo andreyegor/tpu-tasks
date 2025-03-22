@@ -14,7 +14,7 @@ namespace lab_5
             int panelid = panels.Count();
             var that_panel = new Panel();
             that_panel.Size = new Size(side, side);
-            that_panel.Location = new Point(side * panels.Count(), 0);
+            that_panel.Location = new Point((side+10) * panels.Count(), 0);
             that_panel.Name = "panel" + panelid.ToString();
             that_panel.BackColor = Color.DarkCyan;
             this.Controls.Add(that_panel);
@@ -27,12 +27,11 @@ namespace lab_5
         {
             foreach (var panel in panels)
             {
-                if (!panel.Controls.OfType<TextBox>().Any())
-                {
                     var that_textBox = new TextBox();
+                that_textBox.Location = new Point(0, panel.Controls.Count * 10);
                     that_textBox.Text = panel.Name;
                     panel.Controls.Add(that_textBox);
-                }
+               
             }
         }
     }

@@ -1,11 +1,12 @@
 using System.Reflection.Metadata.Ecma335;
-
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
+//оставл€ть на экране исходную матрицу при выводе
 namespace lab_8
 {
     public partial class Form1 : Form
     {
         int gridSize = 10;
-        double[,] grid;
+        double[,] grid, resGrid;
         public Form1()
         {
             InitializeComponent();
@@ -20,9 +21,9 @@ namespace lab_8
             Random rand = new Random();
             for (int i = 0; i < gridSize; i++)
                 for (int j = 0; j < gridSize; j++)
-                    grid[i, j] = rand.Next(-100, 100);
+                    grid[i, j] = rand.Next(-10, 10);
 
-            show();
+            show(dataGridView1, grid);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -35,21 +36,28 @@ namespace lab_8
             }
             textBox1.Text = s.ToString();
 
+            resGrid = new double[gridSize, gridSize];
+            for (int i = 0; i < gridSize; i++)
+                for (int j = 0; j < gridSize; j++)
+                    resGrid[i, j] = grid[i, j];
+
             Func<double, double> f = s > 10 ? (b => b + 13.5) : (b => b * b - 1.5);
             for (int ij = 0; ij < gridSize; ij++)
             {
-                grid[ij, ij] = f(grid[ij, ij]);
+                resGrid[ij, ij] = f(grid[ij, ij]);
             }
 
-            show();
+            show(dataGridView2, resGrid);
         }
 
-        private bool show() {
+        private bool show(DataGridView dataGridView, double[,] grid) {
+            dataGridView.RowCount = gridSize;
+            dataGridView.ColumnCount = gridSize;
             if (grid == null)
                 return false;
             for (int i = 0; i < gridSize; i++)
                 for (int j = 0; j < gridSize; j++)
-                    dataGridView1.Rows[i].Cells[j].Value =
+                    dataGridView.Rows[i].Cells[j].Value =
                     grid[i, j].ToString();
 
             return true;

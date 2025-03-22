@@ -35,7 +35,9 @@ namespace lab_8
             textBox1 = new TextBox();
             label1 = new Label();
             button2 = new Button();
+            dataGridView2 = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
             SuspendLayout();
             // 
             // dataGridView1
@@ -44,11 +46,11 @@ namespace lab_8
             dataGridView1.AllowUserToDeleteRows = false;
             dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(0, 0);
+            dataGridView1.Location = new Point(12, 12);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
             dataGridView1.RowHeadersWidth = 62;
-            dataGridView1.Size = new Size(845, 425);
+            dataGridView1.Size = new Size(422, 439);
             dataGridView1.TabIndex = 0;
             // 
             // button1
@@ -87,11 +89,25 @@ namespace lab_8
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
+            // dataGridView2
+            // 
+            dataGridView2.AllowUserToAddRows = false;
+            dataGridView2.AllowUserToDeleteRows = false;
+            dataGridView2.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView2.Location = new Point(453, 12);
+            dataGridView2.Name = "dataGridView2";
+            dataGridView2.ReadOnly = true;
+            dataGridView2.RowHeadersWidth = 62;
+            dataGridView2.Size = new Size(422, 439);
+            dataGridView2.TabIndex = 5;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(847, 515);
+            ClientSize = new Size(887, 515);
+            Controls.Add(dataGridView2);
             Controls.Add(button2);
             Controls.Add(label1);
             Controls.Add(textBox1);
@@ -100,6 +116,7 @@ namespace lab_8
             Name = "Form1";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -111,5 +128,6 @@ namespace lab_8
         private TextBox textBox1;
         private Label label1;
         private Button button2;
+        private DataGridView dataGridView2;
     }
 }

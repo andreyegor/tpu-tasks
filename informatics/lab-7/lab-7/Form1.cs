@@ -1,30 +1,47 @@
 using System.Diagnostics;
 using System.Numerics;
+using System.Text;
 using System.Text.RegularExpressions;
-
 namespace lab_7
 {
     public partial class Form1 : Form
     {
         public Form1()
         {
+
             InitializeComponent();
         }
 
-        int[] d = [], e = [];
         private void button1_Click(object sender, EventArgs ev)
         {
-            d = fill(textBox1);
-            e = fill(textBox2);
-            if (d.Length != e.Length) {
-                textBox3.Text = "Массивы должны быть одного размера";
-                d = [];
-                e = [];
-            }
+            fill(textBox1, "D");
+            fill(textBox2, "E");
         }
 
-        private int[] fill(TextBox textBox) {
-            var regex = new Regex(@"\[(\d+)\]\s*=\s*(\d+)");
+        private void fill(TextBox textBox, string name)
+        {
+            Random rand = new Random();
+            var m = new double[15];
+            for (int i = 0; i < m.Length; i++)
+            {
+                m[i] = rand.Next(-100, 101);
+            }
+            show(textBox, name, m);
+        }
+
+        private void show(TextBox textBox, string name, double[] m)
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < m.Length; i++)
+            {
+                sb.AppendFormat("{0}[{1}] = {2}\r\n", name, i, m[i]);
+            }
+            textBox.Text = sb.ToString();
+        }
+
+        private int[] parse(TextBox textBox)
+        {
+            var regex = new Regex(@"\[(\d+)\]\s*=\s*(-?\d+)");
 
             string[] lines = textBox.Text.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
             var tokens = new List<Tuple<int, int>>();
@@ -37,11 +54,11 @@ namespace lab_7
                     int id = Int32.Parse(match.Groups[1].Value);
                     int val = Int32.Parse(match.Groups[2].Value);
                     mx = Math.Max(mx, id);
-                    tokens.Add(new Tuple<int, int>(id, val))    ;
+                    tokens.Add(new Tuple<int, int>(id, val));
                 }
             }
 
-            var m = new int[mx+1];
+            var m = new int[mx + 1];
             foreach ((int id, int val) in tokens)
             {
                 m[id] = val;
@@ -51,14 +68,22 @@ namespace lab_7
 
         private void button2_Click(object sender, EventArgs ev)
         {
-            Debug.Assert(d.Length == e.Length);
-            var lines = new string[d.Length];
-            for (int i = 0; i < d.Length; i++) {
-                int di = d[i], ei = e[i];
-                double val = (2 * di + Math.Sin(ei)) / di;
-                lines[i] = String.Format("Mas[{0}] = {1}", i, val);
+            int[] d = [], e = [];
+            d = parse(textBox1);
+            e = parse(textBox2);
+            if (d.Length != e.Length)
+            {
+                textBox3.Text = "Р”Р»РёРЅР° РјР°СЃСЃРёРІРѕРІ РґРѕР»Р¶РЅР° Р±С‹С‚СЊ РѕРґРёРЅР°РєРѕРІРѕР№!";
+                return;
             }
-            textBox3.Text = String.Join("\r\n", lines);
+
+            var f = new double[d.Length];
+            for (int i = 0; i < d.Length; i++)
+            {
+                int di = d[i], ei = e[i];
+                f[i] = (2 * di + Math.Sin(ei)) / di;
+            }
+            show(textBox3, "F", f);
         }
     }
 }

@@ -43,7 +43,7 @@
             textBox1.Location = new Point(12, 37);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(158, 344);
+            textBox1.Size = new Size(158, 538);
             textBox1.TabIndex = 0;
             // 
             // textBox2
@@ -51,7 +51,7 @@
             textBox2.Location = new Point(176, 37);
             textBox2.Multiline = true;
             textBox2.Name = "textBox2";
-            textBox2.Size = new Size(179, 344);
+            textBox2.Size = new Size(179, 538);
             textBox2.TabIndex = 1;
             // 
             // label1
@@ -74,7 +74,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(12, 387);
+            button1.Location = new Point(12, 581);
             button1.Name = "button1";
             button1.Size = new Size(343, 34);
             button1.TabIndex = 4;
@@ -84,7 +84,7 @@
             // 
             // button2
             // 
-            button2.Location = new Point(361, 387);
+            button2.Location = new Point(361, 581);
             button2.Name = "button2";
             button2.Size = new Size(337, 34);
             button2.TabIndex = 5;
@@ -97,7 +97,7 @@
             textBox3.Location = new Point(361, 37);
             textBox3.Multiline = true;
             textBox3.Name = "textBox3";
-            textBox3.Size = new Size(337, 344);
+            textBox3.Size = new Size(337, 538);
             textBox3.TabIndex = 6;
             // 
             // label3
@@ -113,7 +113,7 @@
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(757, 450);
+            ClientSize = new Size(757, 627);
             Controls.Add(label3);
             Controls.Add(textBox3);
             Controls.Add(button2);

@@ -4,8 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 class Plot {
-    public static String generate(HashMap<String, Integer> data,
+    public static String generate(Counter.Count inData,
             boolean isHorisontal, boolean sortDescending, boolean sortByCount) {
+        var data = inData.getCnt();
+        if (data.containsKey("\n")) {
+            data.put("\0\\n", data.get("\n"));
+            data.remove("\n");
+        }
         var sortedData = sortByCount ? sortByCount(data, sortDescending) : sortAlphabetically(data, sortDescending);
         return isHorisontal ? generateHorisontal(sortedData, 20) : generateVertical(sortedData, 80);
     }

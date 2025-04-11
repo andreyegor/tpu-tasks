@@ -25,11 +25,11 @@ public class Main {
     public static double area(double[][] polygon) {
         assert polygon.length >= 3 && polygon[0].length == 2;
         // Выберем единую точку для всех треугольников и примем её за 0
-        var Oxy = new Vector2(polygon[0][0], polygon[0][1]);
+        var Oxy = new Vector(polygon[0][0], polygon[0][1]);
         double out = 0.;
         for (int i = 1; i < polygon.length - 1; i++) {
-            var a = new Vector2(polygon[i][0], polygon[i][1]).subtract(Oxy);
-            var b = new Vector2(polygon[i + 1][0], polygon[i + 1][1]).subtract(Oxy);
+            var a = new Vector(polygon[i][0], polygon[i][1]).subtract(Oxy);
+            var b = new Vector(polygon[i + 1][0], polygon[i + 1][1]).subtract(Oxy);
             out += a.area(b);
         }
         return out;
@@ -39,9 +39,9 @@ public class Main {
         assert polygon.length >= 3 && polygon[0].length == 2;
         double out = 0.;
         for (int i = 0; i < polygon.length; i++) {
-            var a = new Vector2(polygon[i][0], polygon[i][1]);
-            var b = new Vector2(polygon[(i + 1) % polygon.length][0], polygon[(i + 1) % polygon.length][1]);
-            out += b.subtract(a).length();
+            var a = new Vector(polygon[i][0], polygon[i][1]);
+            var b = new Vector(polygon[(i + 1) % polygon.length][0], polygon[(i + 1) % polygon.length][1]);
+            out += b.subtract(a).getLength();
         }
         return out;
     }

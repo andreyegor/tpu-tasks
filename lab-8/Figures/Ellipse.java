@@ -11,6 +11,9 @@ public class Ellipse implements CloseFigure {
     }
 
     public Ellipse(Vector center, Vector semiaxisX, Vector semiaxisY) {
+        if (Double.compare(semiaxisX.scalar(semiaxisY), 0)!=0) {
+            throw new IllegalArgumentException();
+        }
         this.Oxy = center;
         this.semiaxisX = semiaxisX.getAngleX() < semiaxisY.getAngleY() ? semiaxisX : semiaxisY;
         this.semiaxisY = semiaxisX.getAngleX() < semiaxisY.getAngleY() ? semiaxisY : semiaxisX;

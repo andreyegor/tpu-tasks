@@ -19,6 +19,9 @@ public class Ellipse implements ClosedFigure {
     }
 
     private Ellipse(Vector Oxy, Vector semiaxisX, Vector semiaxisY, double perimeter, double area) {
+        if (Double.compare(semiaxisX.scalar(semiaxisY), 0) != 0) {
+            throw new IllegalArgumentException();
+        }
         this.Oxy = Oxy;
         this.semiaxisX = semiaxisX;
         this.semiaxisY = semiaxisY;

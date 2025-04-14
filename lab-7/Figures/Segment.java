@@ -7,7 +7,6 @@ public class Segment implements ScalableFigure {
     private final double length;
 
     public Segment(Vector a, Vector b) {
-        // TODO вроде верно, но перепроверить
         // А красиво и не сделать :(
         this(a.add(b).mul(.5),
                 b.sub(a).mul(.5).getAngleX() < a.sub(b).mul(.5).getAngleX() ? b.sub(a).mul(.5) : a.sub(b).mul(.5),

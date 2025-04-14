@@ -11,7 +11,9 @@ abstract class Points implements ScalableFigure {
     protected Points(Vector Oxy, Vector[] points) {
         this.Oxy = Oxy;
         this.points = points;
-        assert points.length > 1 && invariant() : "Нарушен инвариант";
+
+        if (!(points.length > 1 && invariant()))
+            throw new IllegalArgumentException("Нарушен инвариант");
     }
 
     abstract public Points move(Vector to);

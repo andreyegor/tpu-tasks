@@ -34,7 +34,7 @@ public class RichReader extends Reader {
 
     @Override
     public void close() throws IOException {
-        for (Reader reader : readers) // ?
+        for (Reader reader : readers)
             reader.close();
     }
 }

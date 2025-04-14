@@ -15,10 +15,10 @@ class Counter {
         var out = new HashMap<String, Integer>();
         String line = null;
         while ((line = br.readLine()) != null) {
-            out.put("\n", out.getOrDefault("\n", 0) + 1);
+            out.put("\\n", out.getOrDefault("\\n", 0) + 1);
             combine(out, countLine(line));
         }
-        out.put("\n", out.getOrDefault("\n", 1) - 1);
+        out.put("\\n", out.getOrDefault("\\n", 1) - 1);
         return new Count(out);
     }
 
@@ -80,7 +80,6 @@ class Counter {
             return this.printDependent;
         }
 
-        // не лучшая проверка, но как есть
         private static boolean isPrintable(String s) {
             return s.codePoints().allMatch(cp -> !Character.isISOControl(cp) && cp != KeyEvent.CHAR_UNDEFINED);
         }

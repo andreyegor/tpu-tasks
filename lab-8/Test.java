@@ -146,10 +146,12 @@ class GroupTest {
         Point point = new Point(new Vector(1, 1));
         Group group = new Group(circle, point);
         try {
-            group.remove(0);
-        } catch (IllegalArgumentException e) {
+            group.remove(3);
             assert 0==1;
+        } catch (IllegalArgumentException e) {
+            
         }
+        assert false;
     }
 
     static void testRemoveLastException() {

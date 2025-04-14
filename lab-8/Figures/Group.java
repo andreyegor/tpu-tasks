@@ -2,6 +2,7 @@ package Figures;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -47,12 +48,14 @@ public class Group implements OpenFigure, CloseFigure {
     }
 
     public Group remove(int... indices) {
+        if (indices.length == 0)
+            return this;
         var s = Arrays.stream(indices).boxed().collect(Collectors.toSet());
+        if (Collections.max(s) >= figures.length || Collections.min(s) < 0)
+            throw new IllegalArgumentException();
         var out = IntStream.range(0, figures.length)
                 .filter(i -> !s.contains(i)).mapToObj(i -> figures[i])
                 .toArray(Figure[]::new);
-        if (!s.isEmpty())
-            throw new IllegalArgumentException();
         return new Group(out);
     }
 

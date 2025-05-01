@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 namespace lab_7
 {
     public partial class Form1 : Form
@@ -78,12 +79,16 @@ namespace lab_7
             }
 
             var f = new double[d.Length];
+            var sb = new StringBuilder();
             for (int i = 0; i < d.Length; i++)
             {
-                int di = d[i], ei = e[i];
-                f[i] = (2 * di + Math.Sin(ei)) / di;
+                f[i] = (2 * d[i] + Math.Sin(e[i])) / d[i];
+                if (f[i]>1 && f[i]<3)
+                    sb.AppendFormat("{0}[{1}] = {2}\r\n", "f", i, Math.Round(f[i], 3));
             }
-            show(textBox3, "F", f);
+
+
+            textBox3.Text = sb.ToString();
         }
     }
 }

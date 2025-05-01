@@ -9,7 +9,7 @@
         {
             Console.WriteLine("Мой вариант: {0}", 10 % 3 + 1);//+1 тк индексация c 1
 
-            int ln = 10;
+            int ln = 100;
 
             var r = new Random();
             var m = new int[ln];
@@ -26,7 +26,7 @@
             }
             var (s, sd) = Search(m, target);
             var (bs, bsd) = BinSearch(m, target);
-            Func<int, string> foundNotFound = i => i == -1 ? "элемент не найден" : String.Format("элемент найден на {0} месте", i);
+            Func<int, string> foundNotFound = i => i == -1 ? "элемент не найден" : String.Format("элемент найден на {0} месте", i+1);
             Console.WriteLine("В результате обычного поиска по отсортированному массиву {0}, а в результате бинарного (методом дитхомии) {1}.", foundNotFound(s), foundNotFound(bs));
             Console.WriteLine("Элмент был (не)найден обычным поиском за {0} итераций, а бинарным (методом дитхомии) за {1} итераций.", sd, bsd);
 

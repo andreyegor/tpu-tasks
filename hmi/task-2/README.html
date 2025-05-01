@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>&Kcy;&ocy;&ncy;&tscy;&iecy;&pcy;&tscy;&icy;&yacy; UI &dcy;&lcy;&yacy; &quot;&Ucy;&mcy;&ncy;&ocy;&gcy;&ocy; &kcy;&acy;&lcy;&softcy;&kcy;&ucy;&lcy;&yacy;&tcy;&ocy;&rcy;&acy;&quot;</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="концепция-ui-для-умного-калькулятора">Концепция UI для &quot;Умного калькулятора&quot;</h1>
+<h2 id="терминология">Терминология</h2>
+<h3 id="холст">Холст</h3>
+<ul>
+<li>Пространство, предназначенное для написания текста.</li>
+<li>Ограничено только сверху и слева.</li>
+</ul>
+<h3 id="текст">Текст</h3>
+<ul>
+<li>Весь рукописный ввод пользователя.</li>
+<li>Не обязательно представляет собой набор текстовых символов.</li>
+<li>Не обязательно является выражением.</li>
+<li>Выражение - это часть текста.</li>
+</ul>
+<h3 id="выражение">Выражение</h3>
+<ul>
+<li>Часть текста, распознанная как задание пользователя.</li>
+<li>Выражение содержит знак <strong>равно</strong> и делится на <strong>левую</strong> и <strong>правую</strong> части.</li>
+<li>Правая часть выражения не включает пользовательский ввод.</li>
+<li>Выражения не могут пересекаться, за исключением случаев, когда правая часть одного выражения <strong>является</strong> левой частью другого.</li>
+<li>На любое выражение можно нажать, чтобы открыть меню выражения.</li>
+</ul>
+<h3 id="меню-выражения">Меню выражения</h3>
+<ul>
+<li>Открывается двойным нажатием на выражение (или одинарным, если подключен стилус).</li>
+<li>Представляет собой всплывающее окно.</li>
+<li>В меню отображается текст распознанного выражения.</li>
+<li>Также из меню можно отменить распознавание, после чего выражение становится обычным текстом и игнорируется до его изменения.</li>
+<li>В меню доступны и другие действия, описанные ниже.</li>
+</ul>
+<h2 id="внешний-вид-приложения">Внешний вид приложения</h2>
+<ul>
+<li>Холст можно увеличивать, уменьшать и перемещать двумя пальцами.</li>
+<li>Если подключен стилус, холст можно перемещать и одним пальцем.</li>
+<li><strong>Панель инструментов</strong> - это плавающее окно, которое магнитится к краю экрана и при необходимости сворачивается к нему. Привязана к краю экрана.</li>
+<li>На панели инструментов доступны два инструмента: ручка и ластик.</li>
+<li>Меню - всплывающее окно, привязанное к выражению. Оно содержит текст выражения с кнопками под ним. Меню можно открыть двойным тапом при отключенном стилусе или одинарным при подключенном.</li>
+</ul>
+<p><img src="file:///c:\Users\doesn\code\tpu-tasks\hmi\task-2\img\app.jpg" alt="Эскиз интерфейса приложения"></p>
+<h2 id="faq">FAQ</h2>
+<h3 id="как-пользователь-инициирует-расчет">Как пользователь инициирует расчет?</h3>
+<ul>
+<li>Пользователь пишет текст на экране планшета с помощью стилуса или пальца.</li>
+<li>Математическое выражение распознается как текст слева от знака равно, но не слишком далеко, чтобы не задевать лишний текст.</li>
+<li>Через одну секунду после распознавания знака равно, если не были внесены новые изменения, начинается распознавание и вычисление выражения.</li>
+<li>Если справа, недалеко от знака равно, есть текст, то выражение считается невалидным, и система информирует пользователя о <a href="#%D0%BA%D0%B0%D0%BA-%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%D0%B0-%D0%B8%D0%BD%D1%84%D0%BE%D1%80%D0%BC%D0%B8%D1%80%D1%83%D0%B5%D1%82-%D0%BE-%D0%BD%D0%B5%D0%B2%D0%BE%D0%B7%D0%BC%D0%BE%D0%B6%D0%BD%D0%BE%D1%81%D1%82%D0%B8-%D0%B2%D1%8B%D0%BF%D0%BE%D0%BB%D0%BD%D0%B8%D1%82%D1%8C-%D1%80%D0%B0%D1%81%D1%87%D0%B5%D1%82">невозможности выполнить расчет</a>.</li>
+</ul>
+<h3 id="где-и-как-система-отображает-результаты-вычисления">Где и как система отображает результаты вычисления?</h3>
+<ul>
+<li>Результат отображается справа от знака равно, являющегося самым правым знаком выражения. Цвет результата контрастирует с цветом рукописного ввода.</li>
+<li>Результат отображается рукописным шрифтом, размером, соответствующим среднему размеру текста пользователя, или, для дробей, минимальным между ним и половиной высоты выражения.</li>
+<li>Если результат невозможно представить в виде десятичной дроби, но возможно в виде несократимой обычной или смешанной дроби, то он отображается именно так:<br>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>1</mn><mn>3</mn></mfrac><mo>+</mo><mn>1</mn><mo>=</mo><mfrac><mn>2</mn><mn>3</mn></mfrac></mrow><annotation encoding="application/x-tex">\frac{1}{3} + 1 = \frac{2}{3}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>.</li>
+<li>Если выражение является несократимой обычной или смешанной дробью, то результат представляется в виде десятичной дроби:<br>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mn>2</mn><mn>3</mn></mfrac><mo>=</mo><mn>0.666...</mn></mrow><annotation encoding="application/x-tex">\frac{2}{3} = 0.666...</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.1901em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.666...</span></span></span></span>.</li>
+</ul>
+<p><img src="file:///c:\Users\doesn\code\tpu-tasks\hmi\task-2\img\ans.jpg" alt="Эскиз выражения"></p>
+<h3 id="как-система-информирует-о-невозможности-выполнить-расчет">Как система информирует о невозможности выполнить расчет?</h3>
+<ul>
+<li>Если система не может распознать выражение, нераспознанные части окрашиваются в цвет, контрастный к цвету текста и результата.</li>
+<li>Если в выражении есть математическая ошибка (например, деление на ноль), система выводит &quot;?&quot; того же контрастного цвета.</li>
+</ul>
+<p><img src="file:///c:\Users\doesn\code\tpu-tasks\hmi\task-2\img\ans.jpg" alt="Эскиз ошибки"></p>
+<h3 id="как-система-облегчает-устранение-ошибок">Как система облегчает устранение «ошибок»?</h3>
+<ul>
+<li>Пользователь может стереть или исправить ошибочную часть.</li>
+<li>В меню выражения доступно текстовое редактирование. Если оно используется, весь рукописный ввод выражения заменяется на аналогичный текст, написанный рукописным шрифтом.</li>
+<li>(Опционально) В меню выражения AI-помощник предлагает несколько вариантов исправления для каждого нераспознанного символа.</li>
+</ul>
+<p><img src="file:///c:\Users\doesn\code\tpu-tasks\hmi\task-2\img\menu.jpg" alt="Эскиз меню"></p>
+<h3 id="как-пользователь-может-изменять-выражение">Как пользователь может изменять выражение?</h3>
+<ul>
+<li>Пользователь может стереть часть выражения ластиком или зачеркиванием.</li>
+<li>В меню выражения доступно текстовое редактирование.</li>
+</ul>
+<h3 id="как-пользователь-может-обучиться-работе-с-системой">Как пользователь может обучиться работе с системой?</h3>
+<p>Работа с системой интуитивно понятна, и пользователь может освоить её с помощью простого визуального туториала. Этот туториал можно загрузить при первом открытии приложения. Пользователь увидит, как вводить выражения, как выглядят ошибки и как их исправлять. Также легко обнаружить возможность удаления написанного зачеркиванием. Чтобы избавиться от туториала, пользователь может стереть его ластиком.</p>
+<p><img src="file:///c:\Users\doesn\code\tpu-tasks\hmi\task-2\img\tutorial.jpg" alt="Эскиз туториала"></p>
+<h3 id="как-быть-если-необходимо-вычислить-несколько-выражений">Как быть, если необходимо вычислить несколько выражений?</h3>
+<p>У описанной концепции не возникает проблем с вычислением нескольких выражений.</p>
+<h3 id="как-система-реагирует-на-изменение-ориентации-экрана">Как система реагирует на изменение ориентации экрана?</h3>
+<ul>
+<li>Холст отображается в соответствии с ориентацией экрана.</li>
+<li>Поскольку холст бесконечен, проблем с отображением выражений не возникает.</li>
+</ul>
+<hr>
+<center>Андреев Егор 8к43</center>
+            <script async src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+            
+        </body>
+        </html>

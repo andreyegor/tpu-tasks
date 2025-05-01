@@ -16,6 +16,7 @@ namespace lab_10
 
             SolidBrush blueBrush = new SolidBrush(Color.LightBlue);
             SolidBrush redBrush = new SolidBrush(Color.LightCoral);
+            SolidBrush yellowBrush = new SolidBrush(Color.Yellow);
             SolidBrush blackBrush = new SolidBrush(Color.Black);
 
             g.FillRectangle(redBrush, 50, 100, 150, 50);
@@ -26,6 +27,8 @@ namespace lab_10
 
             g.FillEllipse(blackBrush, 60, 140, 30, 30);
             g.FillEllipse(blackBrush, 160, 140, 30, 30);
+
+            g.FillEllipse(yellowBrush, 250, 0, 30, 30);
         }
     }
 }

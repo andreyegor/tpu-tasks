@@ -1,0 +1,113 @@
+---
+author: "Андреев Егор Сергеевич"
+format: pdf
+sansfont: "Times New Roman"
+mainfont: "Times New Roman"
+fontsize: "14"
+header-includes:
+  - \usepackage{array} # Table border
+  - \usepackage{float} # Table position
+  - \restylefloat{table} # Not transfer table to a new page
+---
+
+# Основы логики высказываний
+
+**ИДЗ 2**
+
+**Вариант:** 16
+
+**Фамилия, имя, отчество:** Андреев Егор Сергеевич
+
+**Номер группы:** 8к43
+
+## Список задач
+
+1. Упростите формулу логики высказываний, используя основные равносильности между
+   формулами.
+   $$
+   (\neg F \vee G \vee H \vee D) \wedge (\neg F \vee H \vee D \vee \neg H \wedge G) \wedge F \wedge \neg (\neg H \vee D) \vee G \wedge H \wedge \neg G
+   $$
+
+## Задача 1
+
+### Условие задачи
+
+Упростите формулу логики высказываний, используя основные равносильности между
+формулами.
+
+$$
+(\neg F \vee G \vee H \vee D) \wedge (\neg F \vee H \vee D \vee \neg H \wedge G) \wedge F \wedge \neg (\neg H \vee D) \vee G \wedge H \wedge \neg G
+$$
+
+### Решение
+
+\begin{multline}
+(\neg F \vee G \vee H \vee D) \wedge (\neg F \vee H \vee D \vee (\neg H \wedge G)) \wedge F \wedge \neg(\neg H \vee D) \vee G \wedge H \wedge \neg G \equiv \\
+\equiv (\neg F \vee G \vee H \vee D) \wedge (\neg F \vee H \vee D \vee (\neg H \wedge G)) \wedge F \wedge \neg(\neg H \vee D) \vee (G \wedge H \wedge \neg G)\equiv \\
+\equiv \langle G \wedge H \wedge \neg G \equiv 0 \rangle \equiv (\neg F \vee G \vee H \vee D) \wedge (\neg F \vee H \vee D \vee (\neg H \wedge G)) \wedge F \wedge \neg(\neg H \vee D)\equiv \\
+\equiv \langle \substack{
+X \vee (Y \wedge Z) \equiv (X \vee Y) \wedge (X \vee Z) \\
+X = \neg F \vee G \vee H, Y = \neg H, Z = G
+} \rangle \equiv (\neg F \vee G \vee H \vee D) \wedge (\neg F \vee G \vee H \vee \neg H) \wedge (\neg F \vee G \vee H \vee G) \wedge F \wedge (H \wedge \neg D) \equiv \\
+\equiv \langle H=1 \rangle \equiv F \wedge (H \wedge \neg D) \equiv F \wedge H \wedge \neg D\\
+\boxed{F \wedge H \wedge \neg D}
+\end{multline}
+
+### Текстовый комментарий
+
+1. Исходная формула
+
+   $$
+   (\neg F \vee G \vee H \vee D) \wedge (\neg F \vee H \vee D \vee (\neg H \wedge G)) \wedge F \wedge \neg(\neg H \vee D) \vee G \wedge H \wedge \neg G,
+   $$
+
+   $$
+   (\neg F \vee G \vee H \vee D) \wedge (\neg F \vee H \vee D \vee (\neg H \wedge G)) \wedge F \wedge \neg(\neg H \vee D) \vee (G \wedge H \wedge \neg G).
+   $$
+
+2. Уберём всегда ложный дизъюнкт
+
+   Так как $G \wedge H \wedge \neg G \equiv 0$, его можно исключить из дизъюнкции:
+
+   $$
+   (\neg F \vee G \vee H \vee D) \wedge (\neg F \vee H \vee D \vee (\neg H \wedge G)) \wedge F \wedge \neg(\neg H \vee D).
+   $$
+
+3. Раскроем отрицание
+
+   Так как $\neg(\neg H \vee D) \equiv (H \wedge \neg D)$, получим:
+
+   $$
+   (\neg F \vee G \vee H \vee D) \wedge (\neg F \vee H \vee D \vee (\neg H \wedge G)) \wedge F \wedge (H \wedge \neg D).
+   $$
+
+4. Применим дистрибутивность к дизъюнкции
+
+   Так как $X \vee (Y \wedge Z) \equiv (X \vee Y) \wedge (X \vee Z)$, то подставив $X \equiv \neg F \vee G \vee H$, $Y \equiv \neg H$, $Z \equiv G$ получим:
+
+   $$
+       (\neg F \vee G \vee H) \vee (\neg H \wedge G) \equiv ((\neg F \vee G \vee H) \vee \neg H) \wedge ((\neg F \vee G \vee H) \vee G),
+   $$
+
+   $$
+       (\neg F \vee G \vee H \vee (\neg H \wedge G)) \equiv (\neg F \vee G \vee H \vee \neg H) \wedge (\neg F \vee G \vee H \vee G),
+   $$
+
+   и подставим в формулу:
+
+   $$
+   (\neg F \vee G \vee H \vee D) \wedge (\neg F \vee G \vee H \vee \neg H) \wedge (\neg F \vee G \vee H \vee G) \wedge F \wedge (H \wedge \neg D).
+   $$
+
+5. Уберём лишние дизъюнкты
+
+   В формуле уже есть конъюнкция с $(H \wedge \neg D)$, значит формула выполнима только при $H=1$. Тогда дизъюнкты $(\neg F \vee G \vee H \vee D)$, $(\neg F \vee G \vee H \vee \neg H)$ и $(\neg F \vee G \vee H \vee G)$ не влияют на конечный результат, удалим их:
+
+   $$
+   F \wedge (H \wedge \neg D) \equiv F \wedge H \wedge \neg D.
+   $$
+
+6. Это и будет упрощённой формой исходной формулы
+   $$
+   (\neg F \vee G \vee H \vee D) \wedge (\neg F \vee H \vee D \vee (\neg H \wedge G)) \wedge F \wedge \neg(\neg H \vee D) \vee (G \wedge H \wedge \neg G) \equiv \boldsymbol{F \wedge H \wedge \neg D}.
+   $$

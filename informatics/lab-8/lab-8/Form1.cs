@@ -42,10 +42,11 @@ namespace lab_8
                     resGrid[i, j] = grid[i, j];
 
             Func<double, double> f = s > 10 ? (b => b + 13.5) : (b => b * b - 1.5);
-            for (int ij = 0; ij < gridSize; ij++)
-            {
-                resGrid[ij, ij] = f(grid[ij, ij]);
-            }
+            for (int i = 0; i < gridSize; i++)
+                for(int j =0; j< gridSize; j++)
+                    {
+                        resGrid[i, j] = f(grid[i, j]);
+                    }
 
             show(dataGridView2, resGrid);
         }

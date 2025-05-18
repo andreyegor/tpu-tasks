@@ -49,7 +49,8 @@ OpenAI GPT-4o, Google Gemini 2.5 pro и Mistral AI Le Chat полностью с
 
 Cгенерированное аудио:
 
-![elevenlabs audio](res/audio-elevenlabs.mp4)
+https://github.com/user-attachments/assets/055c5e0c-90c2-4656-a019-a8c0356cef98
+
 
 Распознанный текст:
 

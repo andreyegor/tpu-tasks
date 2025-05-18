@@ -1,10 +1,17 @@
+# Code editors
 .vs/
 .vscode/
 .metals/
 .scala-build/
 .bsp/
 
+# Build output
 obj/
 bin/
 
+# Documents
 *.odt
+
+# Unreal Engine 4
+Saved/
+Intermediate/

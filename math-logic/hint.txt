@@ -1,1 +1,0 @@
-Quarto render 2.qmd  --output-dir render

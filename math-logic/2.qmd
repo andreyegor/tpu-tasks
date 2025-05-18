@@ -22,11 +22,10 @@ header-includes:
 
 ## Список задач
 
-1. Упростите формулу логики высказываний, используя основные равносильности между
-   формулами.
-   $$
-   (\neg F \vee G \vee H \vee D) \wedge (\neg F \vee H \vee D \vee \neg H \wedge G) \wedge F \wedge \neg (\neg H \vee D) \vee G \wedge H \wedge \neg G
-   $$
+1. Упростите формулу логики высказываний, используя основные равносильности между формулами.
+$$
+(\neg F \vee G \vee H \vee D) \wedge (\neg F \vee H \vee D \vee \neg H \wedge G) \wedge F \wedge \neg (\neg H \vee D) \vee G \wedge H \wedge \neg G
+$$
 
 ## Задача 1
 
@@ -41,6 +40,7 @@ $$
 
 ### Решение
 
+```{=latex}
 \begin{multline}
 (\neg F \vee G \vee H \vee D) \wedge (\neg F \vee H \vee D \vee (\neg H \wedge G)) \wedge F \wedge \neg(\neg H \vee D) \vee G \wedge H \wedge \neg G \equiv \\
 \equiv (\neg F \vee G \vee H \vee D) \wedge (\neg F \vee H \vee D \vee (\neg H \wedge G)) \wedge F \wedge \neg(\neg H \vee D) \vee (G \wedge H \wedge \neg G)\equiv \\
@@ -52,6 +52,7 @@ X = \neg F \vee G \vee H, Y = \neg H, Z = G
 \equiv \langle H=1 \rangle \equiv F \wedge (H \wedge \neg D) \equiv F \wedge H \wedge \neg D\\
 \boxed{F \wedge H \wedge \neg D}
 \end{multline}
+```
 
 ### Текстовый комментарий
 

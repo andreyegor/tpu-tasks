@@ -1,0 +1,51 @@
+---
+author: "Андреев Егор Сергеевич"
+format: pdf
+sansfont: "Times New Roman"
+mainfont: "Times New Roman"
+geometry: top=1cm, bottom=1cm, left=1cm, right=1cm
+fontsize: "14"
+header-includes:
+  - \usepackage{array} # Table border
+  - \usepackage{float} # Table position
+  - \restylefloat{table} # Not transfer table to a new page
+---
+
+# Построение нормальных алгоритмов
+
+**ИДЗ 6**
+
+**Вариант:** 16
+
+**Фамилия, имя, отчество:** Андреев Егор Сергеевич
+
+**Номер группы:** 8к43
+
+## Список задач
+
+1. Постройте нормальный алгоритм для преобразования слова P в слово Q, при условии, что в каждой подстановке $R \rightarrow (•) S$ число букв в словах R и S не должно превышать 3. P=xyzx, Q=xyzxzwxxxw 
+
+## Задача 1
+
+### Условие задачи
+
+Постройте нормальный алгоритм для преобразования слова P в слово Q, при условии, что в каждой подстановке $R \rightarrow (•) S$ число букв в словах R и S не должно превышать 3. P=xyzx, Q=xyzxzwxxxw
+
+### Решение
+
+$$
+\begin{cases}
+\alpha \rightarrow zxz         \text{ (1)} \\
+\beta \rightarrow w \gamma w   \text{ (3)} \\
+\gamma \rightarrow •xxx        \text{ (2)} \\
+yzx \rightarrow y \alpha \beta \text{ (4)}
+\end{cases}
+$$
+
+$$
+xyzx 
+\rightarrow (4) xy \alpha \beta
+\rightarrow (1) xyzxz \beta
+\rightarrow (2) xyzxzw \gamma w
+\rightarrow (3) xyzxzwxxxw
+$$

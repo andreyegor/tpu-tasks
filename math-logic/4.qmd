@@ -1,0 +1,162 @@
+---
+author: "Андреев Егор Сергеевич"
+format: pdf
+sansfont: "Times New Roman"
+mainfont: "Times New Roman"
+geometry: top=1cm, bottom=1cm, left=1cm, right=1cm
+fontsize: "14"
+header-includes:
+  - \usepackage{array} # Table border
+  - \usepackage{float} # Table position
+  - \restylefloat{table} # Not transfer table to a new page
+---
+
+# Основы логики предикатов
+
+**ИДЗ 4**
+
+**Вариант:** 16
+
+**Фамилия, имя, отчество:** Андреев Егор Сергеевич
+
+**Номер группы:** 8к43
+
+## Список задач
+
+1. Перенести отрицание за скобки предиката. Полученное выражение должна иметь нормальную форму.
+ 
+```{=latex}
+\begin{align}
+\neg (\exists v \forall u (A(u,v) \to B(u,v))), \\
+\neg (\forall u \forall v(\neg A(u,v) \land B(u,v))), \\
+\neg (\forall u \exists v (\neg A(u,v) \land \neg B(u,v)))
+\end{align}
+```
+
+1. Привести к сколемовской стандартной форме
+
+```{=latex}
+\begin{align}
+\exists u \exists v \forall w (A(u, v) \land \neg B(u, w)), \\
+forall u \exists v \forall w(\neg A(u,v) \to \neg B(u,w))
+\end{align}
+```
+
+3. Пусть P(x) определен на конечном множестве $e \quad M = \{a_1, \dots, a_k \}$. Какую логическую связку обобщает квантор всеобщности, навешенный на предикат $\forall x (P(x) \equiv ?$ (Т.е. представьте интерпретацию $\forall x (P(x)$).
+
+4. Пусть P(x) определен на конечном множестве $e \quad M = \{a_1, \dots, a_k \}$. Какую логическую связку обобщает квантор всеобщности, навешенный на предикат $\exists x P(x) \equiv ?$ (Т.е. представьте интерпретацию $\exists x P(x)$).
+
+5. Привести к предваренной нормальной форме предикаты:
+
+```{=latex}
+\begin{align}
+\forall x P(x) \land \forall x Q(x) \equiv ..., \\
+\forall x P(x) \lor \forall x Q(x) \equiv ..., \\
+\exists x P(x) \land \exists x Q(x) \equiv ..., \\
+\exists x P(x) \lor \exists x Q(x) \equiv ..., \\
+\forall x P(x) \lor \exists x Q(x) \equiv ...,
+\end{align}
+```
+
+## Задача 1
+
+### Условие задачи
+
+Перенести отрицание за скобки предиката. Полученное выражение должна иметь нормальную форму.
+
+```{=latex}
+\setcounter{equation}{0}
+\begin{align}
+\neg (\exists v \forall u (A(u,v) \to B(u,v))), \\
+\neg (\forall u \forall v(\neg A(u,v) \land B(u,v))), \\
+\neg (\forall u \exists v (\neg A(u,v) \land \neg B(u,v)))
+\end{align}
+```
+
+### Решение
+
+```{=latex}
+\setcounter{equation}{0}
+\begin{align}
+\neg (\exists v \forall u (A(u,v) \to B(u,v))) \sim \forall v \exists u (A(u,v) \land \neg B(u,v)),      \\
+\neg (\forall u \forall v(\neg A(u,v) \land B(u,v))) \sim \exists u \exists v (A(u,v) \lor \neg B(u,v)), \\
+\neg (\forall u \exists v (\neg A(u,v) \land \neg B(u,v))) \sim \exists u \forall v (A(u, v) \lor B(u, v))
+\end{align}
+```
+
+## Задача 2
+
+### Условие задачи
+
+Привести к сколемовской стандартной форме
+
+```{=latex}
+\setcounter{equation}{3}
+\begin{align}
+\exists u \exists v \forall w (A(u, v) \land \neg B(u, w)), \\
+forall u \exists v \forall w(\neg A(u,v) \to \neg B(u,w))
+\end{align}
+```
+
+### Решение
+
+```{=latex}
+\setcounter{equation}{3}
+\begin{align}
+\exists u \exists v \forall w (A(u,v) \land \neg B(u,w))\sim \forall w(A(a,b)\land\neg B(a,w)) \sim \forall w A(a,b) \land \forall w \neg B(a,w), \\
+\forall u \exists v \forall w (\neg A(u,v) \to \neg B(u,w)) \sim \forall u \forall w (\neg A(u,f(u)) \to \neg B(u,w)) \sim \forall u \forall w (A(u,f(u)) \lor \neg B(u,w))
+\end{align}
+```
+
+## Задача 3
+
+### Условие задачи
+
+Пусть P(x) определен на конечном множестве $e \quad M = \{a_1, \dots, a_k \}$. Какую логическую связку обобщает квантор всеобщности, навешенный на предикат $\forall x P(x) \equiv ?$ (Т.е. представьте интерпретацию $\forall x P(x)$).
+
+### Решение
+
+$$
+\forall x P(x) \equiv P(a_1) \land P(a_2) \land ... \land P(a_k)
+$$
+
+## Задача 4
+
+### Условие задачи
+
+Пусть P(x) определен на конечном множестве $e \quad M = \{a_1, \dots, a_k \}$. Какую логическую связку обобщает квантор всеобщности, навешенный на предикат $\exists x P(x) \equiv ?$ (Т.е. представьте интерпретацию $\exists x P(x)$).
+
+### Решение
+
+$$
+\exists x P(x) \equiv P(a_1) \lor P(a_2) \lor ... \lor P(a_k)
+$$
+
+## Задача 5
+
+### Условие задачи
+Привести к предваренной нормальной форме предикаты:
+
+```{=latex}
+\setcounter{equation}{5}
+\begin{align}
+\forall x P(x) \land \forall x Q(x) \equiv ..., \\
+\forall x P(x) \lor \forall x Q(x) \equiv ...,  \\
+\exists x P(x) \land \exists x Q(x) \equiv ..., \\
+\exists x P(x) \lor \exists x Q(x) \equiv ...,  \\
+\forall x P(x) \lor \exists x Q(x) \equiv ...
+\end{align}
+```
+
+### Решение
+
+```{=latex}
+\setcounter{equation}{5}
+\begin{align}
+\forall x P(x) \land \forall x Q(x) \equiv \forall x (P(x) \land Q(x)), \\
+\forall x P(x) \lor \forall x Q(x) \equiv \forall x (P(x) \lor Q(x)),   \\
+\exists x P(x) \land \exists x Q(x) \equiv \exists x (P(x) \land Q(x)), \\
+\exists x P(x) \lor \exists x Q(x) \equiv \exists x (P(x) \lor Q(x)),   \\
+\forall x P(x) \lor \exists x Q(x) \equiv \forall x \exists y (P(x) \lor Q(y))
+\end{align}
+```

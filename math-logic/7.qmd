@@ -1,0 +1,69 @@
+---
+author: "Андреев Егор Сергеевич"
+format: pdf
+sansfont: "Times New Roman"
+mainfont: "Times New Roman"
+geometry: top=1cm, bottom=1cm, left=1cm, right=1cm
+fontsize: "14"
+header-includes:
+  - \usepackage{array} # Table border
+  - \usepackage{float} # Table position
+  - \restylefloat{table} # Not transfer table to a new page
+---
+
+# Построение алгоритма Тьюринга
+
+**ИДЗ 7**
+
+**Вариант:** 16
+
+**Фамилия, имя, отчество:** Андреев Егор Сергеевич
+
+**Номер группы:** 8к43
+
+## Список задач
+
+1. Постройте машину Тьюринга для преобразования слова P в слово Q. P=xyz, Q=xyzzyxx
+
+## Задача 1
+
+### Условие задачи
+
+Постройте машину Тьюринга для преобразования слова P в слово Q. P=xyz, Q=xyzzyxx
+
+### Решение
+
+$$
+S = {S_0, x, y, z}
+$$
+
+```{=latex}
+\begin{align}
+&q_0 x   R q_1 \\
+&q_0 y   R q_0 \\
+&q_0 z   R q_1 \\
+&q_1 S_0 z q_1 \\
+&q_1 z   R q_2 \\
+&q_2 S_0 y q_2 \\
+&q_2 y   R q_3 \\
+&q_3 S_0 x q_3 \\
+&q_3 x   R q_4 \\
+&q_4 S_0 x q_5 \\
+\end{align}
+```
+
+```{=latex}
+\begin{align}
+\mathbf{x}yz (0)
+\rightarrow (0) x\mathbf{y}z
+\rightarrow (0) xy\mathbf{z}
+\rightarrow (1) xyz\mathbf{S_0}
+\rightarrow (1) xyz\mathbf{z}&
+\rightarrow (2) xyzz\mathbf{S_0} \notag \\
+\rightarrow (2) xyzz\mathbf{y}&
+\rightarrow (3) xyzzy\mathbf{S_0}
+\rightarrow (3) xyzzy\mathbf{x}
+\rightarrow (4) xyzzyx\mathbf{S_0}
+\rightarrow (4) xyzzyx\mathbf{x}
+\end{align}
+```

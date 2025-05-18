@@ -1,0 +1,140 @@
+---
+author: "Андреев Егор Сергеевич"
+format: pdf
+sansfont: "Times New Roman"
+mainfont: "Times New Roman"
+geometry: top=1cm, bottom=1cm, left=1cm, right=1cm
+fontsize: "14"
+header-includes:
+  - \usepackage{array} # Table border
+  - \usepackage{float} # Table position
+  - \restylefloat{table} # Not transfer table to a new page
+---
+
+# Основы логики высказываний
+
+**ИДЗ 3**
+
+**Вариант:** 16
+
+**Фамилия, имя, отчество:** Андреев Егор Сергеевич
+
+**Номер группы:** 8к43
+
+## Список задач
+
+1. Получить СДНФ и СКНФ двумя способами ( используя таблицу истинности и используя формулы равносильности).
+$$
+F \rightarrow H \vee F \wedge G \wedge \neg H
+$$
+
+## Задача 1
+
+### Условие задачи
+
+Получить СДНФ и СКНФ двумя способами ( используя таблицу истинности и используя формулы равносильности).
+
+$$
+F \rightarrow H \vee F \wedge G \wedge \neg H
+$$
+
+### Решение через таблицу истинности
+
+$$
+f = F \rightarrow H \vee F \wedge G \wedge \neg H
+$$
+
+| F   | G   | H   | $f(F,G,H)$ |
+| --- | --- | --- | ---------- |
+| 0   | 0   | 0   | 1          |
+| 0   | 0   | 1   | 1          |
+| 0   | 1   | 0   | 1          |
+| 0   | 1   | 1   | 1          |
+| 1   | 0   | 0   | 0          |
+| 1   | 0   | 1   | 1          |
+| 1   | 1   | 0   | 1          |
+| 1   | 1   | 1   | 1          |
+
+#### СДНФ
+
+При $f(F,G,H) = 1$:
+
+
+| F   | G   | H   | конъюнкт                             |
+| --- | --- | --- | ------------------------------------ |
+| 0   | 0   | 0   | $\neg F \wedge \neg G \wedge \neg H$ |
+| 0   | 0   | 1   | $\neg F \wedge \neg G \wedge      H$ |
+| 0   | 1   | 0   | $\neg F \wedge      G \wedge \neg H$ |
+| 0   | 1   | 1   | $\neg F \wedge      G \wedge      H$ |
+| 1   | 0   | 1   | $F      \wedge \neg G \wedge      H$ |
+| 1   | 1   | 0   | $F      \wedge      G \wedge \neg H$ |
+| 1   | 1   | 1   | $F      \wedge      G \wedge      H$ |
+
+$$
+\boxed{
+\neg F \wedge \neg G \wedge \neg H \vee
+\neg F \wedge \neg G \wedge      H \vee
+\neg F \wedge      G \wedge \neg H \vee
+\neg F \wedge      G \wedge      H \vee
+     F \wedge \neg G \wedge      H \vee
+     F \wedge      G \wedge \neg H \vee
+     F \wedge      G \wedge      H
+     }
+$$
+
+#### СКНФ
+
+При $f(F,G,H) = 0$:
+
+| F   | G   | H   | дизъюнкт               |
+| --- | --- | --- | ---------------------- |
+| 1   | 0   | 0   | $\neg F \vee G \vee H$ |
+
+$$
+\boxed{
+\neg F \vee G \vee H
+}
+$$
+
+### Решение через формулы равносильности
+
+#### СДНФ
+
+```{=latex}
+\begin{multline}
+F \rightarrow H \vee F \wedge G \wedge \neg H   \equiv
+\neg F \vee H \vee (F \wedge G \wedge \neg H) \equiv \\
+(\neg F \wedge (H \vee \neg H) \wedge (G \vee \neg G)) \vee
+(H \wedge (F \vee \neg F) \wedge (G \vee \neg G)) \vee
+(F \wedge G \wedge \neg H) \equiv \\
+(\neg F \wedge H \wedge G) \vee (\neg F \wedge H \wedge \neg G) \vee
+(\neg F \wedge \neg H \wedge G) \vee (\neg F \wedge \neg H \wedge \neg G) \vee
+(H \wedge F \wedge G) \vee \\ \vee (H \wedge F \wedge \neg G) \vee
+(H \wedge \neg F \wedge G) \vee (H \wedge \neg F \wedge \neg G) \vee
+(F \wedge G \wedge \neg H) \equiv \\
+(\neg F \wedge H \wedge G) \vee (\neg F \wedge H \wedge \neg G) \vee
+(\neg F \wedge \neg H \wedge G) \vee (\neg F \wedge \neg H \wedge \neg G) \vee
+(H \wedge F \wedge G) \vee (H \wedge F \wedge \neg G) \vee
+(F \wedge G \wedge \neg H)\\
+\end{multline}
+\boxed{
+\neg F \wedge H \wedge G \vee \neg F \wedge H \wedge \neg G \vee
+\neg F \wedge \neg H \wedge G \vee \neg F \wedge \neg H \wedge \neg G \vee
+H \wedge F \wedge G \vee H \wedge F \wedge \neg G \vee
+F \wedge G \wedge \neg H
+}
+```
+
+#### СКНФ
+
+```{=latex}
+\begin{multline}
+F \rightarrow H \vee F \wedge G \wedge \neg H   \equiv
+\neg F \vee H \vee (F \wedge G \wedge \neg H) \equiv 
+(\neg F \vee H \vee F) \wedge (\neg F \vee H \vee G) \wedge (\neg F \vee H \vee \neg H)\equiv\\
+\neg F \vee G \vee H
+\end{multline}
+\boxed{
+\neg F \vee G \vee H
+}
+```

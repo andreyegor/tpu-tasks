@@ -1,4 +1,4 @@
-# aaa
+# Лабораторная работа 6
 
 ```bash
 egor@myLaptop ~/t/i/l/dir (main)> echo lab-6\nlesson 5

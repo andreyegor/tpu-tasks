@@ -49,10 +49,7 @@ OpenAI GPT-4o, Google Gemini 2.5 pro и Mistral AI Le Chat полностью с
 
 Cгенерированное аудио:
 
-<audio controls>
-  <source src="res/audio-elevenlabs.mp3" type="audio/mpeg">
-  elevenlabs audio
-</audio>
+![elevenlabs audio](res/audio-elevenlabs.mp4)
 
 Распознанный текст:
 

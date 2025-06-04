@@ -1,6 +1,6 @@
 package Figures;
 
-public class Rectangle extends ClosePoints {
+public class Rectangle extends ClosePoints{
     public Rectangle(Vector a, Vector b, Vector c, Vector d) {
         super(findOxy(new Vector[] { a, b, c, d }), findPoints(new Vector[] { a, b, c, d }));
     }

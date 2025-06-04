@@ -1,6 +1,8 @@
 package Figures;
 
-public interface Figure {
+import Serialize.Serializable;
+
+public interface Figure extends Serializable {
     public Figure move(Vector to);
 
     public void draw();

@@ -1,9 +1,12 @@
 package Figures;
 
 import java.util.Objects;
+
+import Serialize.Serializable;
+
 import java.lang.Math;
 
-public final class Vector {
+public final class Vector implements Serializable {
     private static final Vector OX = new Vector(1, 0, 0, Math.PI / 2);
     private static final Vector OY = new Vector(0, -1, Math.PI / 2, 0);
 

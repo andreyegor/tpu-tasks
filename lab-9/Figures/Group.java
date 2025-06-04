@@ -93,4 +93,17 @@ public class Group implements OpenFigure, CloseFigure {
     public double getLength() {
         return length;
     }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        Group group = (Group) other;
+        return java.util.Arrays.equals(this.figures, group.figures);
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Arrays.hashCode(figures);
+    }
 }

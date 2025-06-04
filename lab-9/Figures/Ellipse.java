@@ -53,7 +53,7 @@ public class Ellipse implements CloseFigure {
         if (other == null || getClass() != other.getClass())
             return false;
         var otherEllipsis = (Ellipse) other;
-        return otherEllipsis.Oxy == Oxy && otherEllipsis.semiaxisX == semiaxisX && otherEllipsis.semiaxisY == semiaxisY;
+        return otherEllipsis.Oxy.equals(Oxy) && otherEllipsis.semiaxisX.equals( semiaxisX) && otherEllipsis.semiaxisY.equals(semiaxisY);
     }
 
     @Override

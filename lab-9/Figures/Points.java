@@ -58,90 +58,11 @@ abstract class Points implements ScalableFigure {
         var otherFigure = (Points) other;
         return Oxy.equals(otherFigure.Oxy) &&
                 points.length == otherFigure.points.length &&
-                Arrays.stream(points)
-                        .allMatch(p -> Arrays.stream(otherFigure.points).anyMatch(p::equals));
+                Arrays.equals(points, otherFigure.points);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(Oxy, Arrays.hashCode(points));
     }
-}
-
-abstract class ConnectedPoints extends Points implements OpenFigure {
-    final double length;
-
-    protected ConnectedPoints(Vector[] points) {
-        this(findOxy(points), findPoints(points));
-    }
-
-    protected ConnectedPoints(Vector Oxy, Vector[] points) {
-        super(Oxy, points);
-        length = length();
-    }
-
-    @Override
-    public void draw() {
-    }
-
-    @Override
-    public double getLength() {
-        return length;
-    }
-
-    protected double length() {
-        double out = 0;
-        for (int i = 0; i < points.length - 1; i++) {
-            out += points[i].sub(points[i + 1]).getLength();
-        }
-        return out;
-    }
-}
-
-abstract class ClosePoints extends Points implements CloseFigure {
-    protected double perimeter, area;
-
-    protected ClosePoints(Vector[] points) {
-        this(findOxy(points), findPoints(points));
-    }
-
-    @Override
-    public void draw() {
-    }
-
-    @Override
-    public double getPerimeter() {
-        return perimeter;
-    }
-
-    @Override
-    public double getArea() {
-        return area;
-    }
-
-    protected ClosePoints(Vector Oxy, Vector[] points) {
-        super(Oxy, points);
-        perimeter = perimeter();
-        area = area();
-    }
-
-    protected double perimeter() {
-        double out = 0.;
-        for (int i = 1; i < points.length - 1; i++) {
-            points[i].sub(points[(i + 1) % points.length]).getLength();
-        }
-        return out;
-    }
-
-    protected double area() {
-        var Oxy = points[0];
-        double out = 0.;
-        for (int i = 1; i < points.length - 1; i++) {
-            var a = points[i].sub(Oxy);
-            var b = points[i + 1].sub(Oxy);
-            out += a.area(b);
-        }
-        return out;
-    }
-
 }

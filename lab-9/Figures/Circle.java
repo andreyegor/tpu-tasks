@@ -45,7 +45,7 @@ public class Circle implements CloseFigure {
         if (other == null || getClass() != other.getClass())
             return false;
         var otherSegment = (Circle) other;
-        return otherSegment.Oxy == Oxy && otherSegment.r == r;
+        return otherSegment.Oxy.equals(Oxy) && otherSegment.r == r;
     }
 
     @Override

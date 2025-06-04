@@ -22,7 +22,7 @@ public class Point implements Figure {
             return true;
         if (other == null || getClass() != other.getClass())
             return false;
-        return ((Point) other).Oxy == Oxy;
+        return ((Point) other).Oxy.equals(Oxy);
     }
 
     public int hashCode() {

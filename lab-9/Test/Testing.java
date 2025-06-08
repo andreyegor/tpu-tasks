@@ -25,8 +25,7 @@ public class Testing {
     Boolean fnf = false;
 
     public Testing() {
-        serializer = new JsonLikeSerializer(Generator.getAllSerializables()
-                .toArray(new Class[0]));
+        serializer = new JsonLikeSerializer();
 
         try {
             var fos = new FileOutputStream(FILE_NAME);

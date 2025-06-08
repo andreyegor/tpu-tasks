@@ -31,14 +31,6 @@ public class JsonLikeDeserializeCore implements DeserializeCore {
     private static final char DOUBLE_LST = 'D';
     private static final String CLASS_KEY = "__classtype__";
 
-    private HashMap<String, Class<?>> deserializable = new HashMap<>();
-
-    public JsonLikeDeserializeCore(Class<?>[] deserializables) {
-        for (Class<?> cls : deserializables) {
-            this.deserializable.put(cls.getName(), cls);
-        }
-    }
-
     @Override
     public Object deserialize(String s) {
         s = s.trim();
@@ -105,7 +97,7 @@ public class JsonLikeDeserializeCore implements DeserializeCore {
     private Object deserializeArray(String s) {
         List<Object> list = new ArrayList<>();
         s = s.substring(1, s.length() - 1).trim();
-        
+
         if (s.isEmpty())
             return list;
         int depth = 0, last = 0;
@@ -148,7 +140,8 @@ public class JsonLikeDeserializeCore implements DeserializeCore {
         if (s.matches(FRB_CHR_RE)) {
             return s;
         } else {
-            throw new IllegalArgumentException("String \"%s\" contains forbidden characters: \"%s\"".formatted(s, FRB_CHR));
+            throw new IllegalArgumentException(
+                    "String \"%s\" contains forbidden characters: \"%s\"".formatted(s, FRB_CHR));
         }
     }
 
@@ -157,17 +150,22 @@ public class JsonLikeDeserializeCore implements DeserializeCore {
             return map;
         var className = (String) map.get(CLASS_KEY);
 
-        var classs = deserializable.get(className);
-        if (classs != null && CustomSerializable.class.isAssignableFrom(classs)) {
+        Class<?> classs;
+        try {
+            classs = Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Failed to auto-deserialize %s - class not found".formatted(className), e);
+        }
+        if (CustomSerializable.class.isAssignableFrom(classs)) {
             map.remove(CLASS_KEY);
             try {
                 var method = classs.getMethod("deserialize", Map.class);// 😭
                 return method.invoke(null, map);
             } catch (Exception e) {
-                throw new RuntimeException("Failed to run deserialize method", e);
+                throw new RuntimeException("Failed to run deserialize method for " + className, e);
             }
         }
-        if (classs != null && !(Serializable.class.isAssignableFrom(classs))) {
+        if (!Serializable.class.isAssignableFrom(classs)) {
             return map;
         }
         map.remove(CLASS_KEY);
@@ -197,10 +195,8 @@ public class JsonLikeDeserializeCore implements DeserializeCore {
 
             }
             return instance;
-        } catch (
-
-        Exception e) {
-            throw new RuntimeException("Failed to auto-deserialize:", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to auto-deserialize " + className, e);
         }
     }
 

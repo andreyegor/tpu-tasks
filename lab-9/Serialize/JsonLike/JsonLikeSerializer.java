@@ -6,9 +6,9 @@ public class JsonLikeSerializer implements Serializer{
     JsonLikeDeserializeCore jsonLikeDeserializeCore;
     JsonLikeSerializeCore jsonLikeSerializeCore; 
 
-    public JsonLikeSerializer(Class<?>... deserializables) {
+    public JsonLikeSerializer() {
         jsonLikeSerializeCore = new JsonLikeSerializeCore();
-        jsonLikeDeserializeCore = new JsonLikeDeserializeCore(deserializables);
+        jsonLikeDeserializeCore = new JsonLikeDeserializeCore();
     }
 
     @Override

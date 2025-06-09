@@ -1,0 +1,10 @@
+# vscode
+.vs/
+
+# idea
+.idea/
+out/
+*.iml
+
+#other
+build/

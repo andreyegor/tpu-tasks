@@ -3,7 +3,7 @@ import java.util.Scanner;
 import java.util.function.DoubleUnaryOperator;
 import java.util.stream.Collectors;
 
-class MainLab2 {
+class Main {
     public static void main(String[] args) {
         int a, b, c, x_from, x_to, table_size, steps_count;
         Scanner sc = new Scanner(System.in);

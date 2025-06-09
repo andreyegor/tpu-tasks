@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-class MainLab4 {
+class Main {
     public static void main(String[] args) {
         System.out.println(java.nio.charset.Charset.defaultCharset());
         String fileName = "java-course/lab-4/sample.txt";

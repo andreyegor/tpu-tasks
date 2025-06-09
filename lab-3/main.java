@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.HashSet;
 import java.util.TreeSet;
 
-class MainLab3 {
+class Main {
     public static void main(String[] args) {
         String ArrayName = "Array";
         String ArrayListName = "ArrayList";

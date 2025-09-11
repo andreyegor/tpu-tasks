@@ -27,7 +27,6 @@ public class App extends Application {
         Button button = new Button("Выбрать файл");
 
         button.setOnAction(e -> {
-            grc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Выберите файл");
             String currentDir = System.getProperty("user.dir");
@@ -38,6 +37,8 @@ public class App extends Application {
                 var fis = new FileInputStream(file);
                 var iss = new InputStreamSerializer(fis, serializer);
                 var fig = (Figure) iss.read();
+                grc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                grc.beginPath();
                 fig.draw(grc);
             } catch (FileNotFoundException err) {
                 grc.fillText("Файл не найден", 0, 0);
@@ -57,12 +58,23 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-        var testing = new Testing();
-        // testing.testSingleFigure();
-        // testing.testFiguresList();
-        testing.testGroup();
-        testing.end();
-
+        var bike = generate.Generate.bike();
+        write(bike, "bike");
+        var house = generate.Generate.house();
+        write(house, "house");
         launch(args);
+    }
+
+    private static boolean write(Object figure, String name) {
+        var serializer = new JsonLikeSerializer();
+        try {
+            var fos = new FileOutputStream(name);
+            var oss = new OutputStreamSerializer(fos, serializer);
+            oss.write(figure);
+            return true;
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
     }
 }

@@ -1,4 +1,4 @@
-package Figures;
+package figures;
 
 public class Polygon extends ClosePoints {
     public Polygon(Vector... points) {

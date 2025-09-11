@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 import Serialize.Serializable;
 import Serialize.CustomSerializable;
-import Serialize.Core.SerializeCore;
+import Serialize.core.SerializeCore;
 
 public class JsonLikeSerializeCore implements SerializeCore {
     private static final char OPNM = '{';

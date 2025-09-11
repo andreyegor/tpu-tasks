@@ -1,4 +1,4 @@
-package Figures;
+package figures;
 
 public class Triangle extends ClosePoints {
     public Triangle(Vector a, Vector b, Vector c) {

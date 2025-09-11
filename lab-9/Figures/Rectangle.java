@@ -1,4 +1,4 @@
-package Figures;
+package figures;
 
 public class Rectangle extends ClosePoints{
     public Rectangle(Vector a, Vector b, Vector c, Vector d) {

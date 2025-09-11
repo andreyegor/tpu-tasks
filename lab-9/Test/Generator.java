@@ -1,9 +1,9 @@
 package Test;
 
 import Serialize.Serializable;
-import java.util.List;
+import figures.*;
 
-import Figures.*;
+import java.util.List;
 
 class Generator {
     static List<Class<? extends Serializable>> getAllSerializables() {

@@ -86,17 +86,10 @@ public class GridPaneScreen implements GridScreen {
     }
 
     @Override
-    public void set(Integer x, Integer y) {
+    public void set(Integer x, Integer y, Boolean state) {
         if (!validCoords(x, y))
             return;
-        Platform.runLater(() -> applyFill(x, y, true));
-    }
-
-    @Override
-    public void unset(Integer x, Integer y) {
-        if (!validCoords(x, y))
-            return;
-        Platform.runLater(() -> applyFill(x, y, false));
+        applyFill(x, y, state);
     }
 
     @Override

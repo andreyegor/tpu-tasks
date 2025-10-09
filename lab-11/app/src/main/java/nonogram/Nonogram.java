@@ -5,54 +5,39 @@ import java.util.BitSet;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.IntPredicate;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class Nonogram {
-    private GridScreen screen;
-    private BitSet image = new BitSet(0);
-    private Integer ox = 0, oy = 0;
-    private Integer oxHintsShift = 0, oyHintsShift = 0;
+    protected GridScreen screen;
+    protected BitSet image = new BitSet(0);
+    protected Integer ox = 0, oy = 0;
+    protected Integer oxHintsShift = 0, oyHintsShift = 0;
 
     public Nonogram(GridScreen screen) {
         this.screen = screen;
     }
 
-    public void create(BitSet image, Integer ox, Integer oy) {
-        this.image = image;
+    protected void create(BitSet image, Integer ox, Integer oy) {
         this.ox = ox;
         this.oy = oy;
-
-        List<List<Integer>> xHints = IntStream.range(0, oy)
-                .mapToObj(y -> countContinuous(ox, x -> state(x, y)))
-                .collect(Collectors.toList());
-        List<List<Integer>> yHints = IntStream.range(0, ox)
-                .mapToObj(x -> countContinuous(oy, y -> state(x, y)))
-                .collect(Collectors.toList());
-        oxHintsShift = xHints.stream().mapToInt(List::size).max().orElse(0);
-        oyHintsShift = yHints.stream().mapToInt(List::size).max().orElse(0);
-
-        screen.blank(ox + oxHintsShift, oy + oyHintsShift);
-
-        drawHints(
-                xHints,
-                oxHintsShift,
-                (Integer line, Integer pos) -> pos,
-                (Integer line, Integer pos) -> oyHintsShift + line);
-
-        drawHints(
-                yHints,
-                oyHintsShift,
-                (Integer line, Integer pos) -> oxHintsShift + line,
-                (Integer line, Integer pos) -> pos);
+        this.image = (BitSet) image.clone();
 
     }
 
-    private Boolean state(int x, int y) {
+    public void swap(int x, int y) {
+        var newState = !state(x, y);
+        set(x, y, newState);
+        screen.set(oxHintsShift+x, oyHintsShift+y, newState);
+    }
+
+    protected boolean state(int x, int y) {
         return image.get(y * ox + x);
     }
 
-    private List<Integer> countContinuous(int size, IntPredicate filled) {
+    protected void set(int x, int y, boolean state) {
+        image.set(y * ox + x, state);
+    }
+
+    protected List<Integer> countContinuous(int size, IntPredicate filled) {
         List<Integer> res = new ArrayList<>();
         int cnt = 0;
         for (int i = 0; i < size; i++) {
@@ -68,7 +53,7 @@ public class Nonogram {
         return res;
     }
 
-    private void drawHints(
+    protected void drawHints(
             List<List<Integer>> hints,
             int primaryShift,
             BiFunction<Integer, Integer, Integer> screenXFunc,

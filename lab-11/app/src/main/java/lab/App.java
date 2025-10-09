@@ -6,7 +6,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import nonogram.Nonogram;
+import nonogram.NonogramGame;
 
 public class App extends Application {
     @Override
@@ -21,11 +21,10 @@ public class App extends Application {
             }
         }
 
-
         var grid = new GridPane();
         var gridScreen = new GridPaneScreen(grid);
 
-        Nonogram nonogram = new Nonogram(gridScreen);
+        var nonogram = new NonogramGame(gridScreen);
         nonogram.create(image, ox, oy);
 
         Scene scene = new Scene(grid);

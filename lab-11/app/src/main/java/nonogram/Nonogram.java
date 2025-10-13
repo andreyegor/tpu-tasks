@@ -19,8 +19,8 @@ public class Nonogram implements Cloneable {
         }
         this.nonogram = (BitGrid) nonogram.clone();
 
-        int ox = nonogram.getOx(), oy = nonogram.getOx();
-        this.hints = new Hints(new int[ox][(int) Math.ceil(oy / 2.0)], new int[oy][(int) Math.ceil(ox / 2.0)]);
+        int ox = nonogram.getOx(), oy = nonogram.getOy();
+        this.hints = new Hints(new int[ox][(int) Math.ceil(ox / 2.0)], new int[oy][(int) Math.ceil(oy / 2.0)]);
 
         IntStream.range(0, ox).forEach(i -> updateHints(i, 0));
         IntStream.range(0, oy).forEach(i -> updateHints(0, i));
@@ -39,10 +39,8 @@ public class Nonogram implements Cloneable {
     public Pair<Integer, Integer> getLongestHint() {
         Function<int[][], Integer> findMax = (m -> Arrays
                 .stream(m)
-                .mapToInt(r -> IntStream.range(0, r.length)
-                        .filter(i -> r[i] != 0)
-                        .max().orElse(-1))
-                .max().orElse(-1));
+                .mapToInt(l -> (int) Arrays.stream(l).filter(v -> v != 0).count())
+                .max().orElse(0));
 
         return new Pair<Integer, Integer>(findMax.apply(hints.ox), findMax.apply(hints.oy));
     }
@@ -91,10 +89,8 @@ public class Nonogram implements Cloneable {
     }
 
     private int[] trimTrailingZeros(int[] m) {
-        int l = IntStream
-                .iterate(m.length - 1, i -> i >= 0, i -> i - 1)
-                .filter(i -> m[i] != 0).findFirst().orElse(-1);
-        return l == -1 ? new int[0] : Arrays.copyOfRange(m, 0, l + 1);
+        int l = (int) Arrays.stream(m).filter(v -> v != 0).count();
+        return l == -1 ? new int[0] : Arrays.copyOfRange(m, 0, l);
     }
 
     private int[] countContinuous(int size, IntPredicate filled) {

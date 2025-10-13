@@ -33,8 +33,8 @@ public class NonogramGame {
         oy = ref.getOy();
 
         var hintsShift = nonogram.getLongestHint();
-        oxHintsShift = hintsShift.getKey();
-        oyHintsShift = hintsShift.getValue();
+        oyHintsShift = hintsShift.getKey();
+        oxHintsShift = hintsShift.getValue();
 
         screen.blank(ox + oxHintsShift, oy + oyHintsShift);
 
@@ -52,7 +52,7 @@ public class NonogramGame {
 
     private void flipOnClickAlg(int x, int y) {
         throwWhenGameNotCreated();
-        if (x < 0 || y < 0 || x >= ox || x >= oy) {
+        if (x < 0 || y < 0 || x >= ox || y >= oy) {
             return;
         }
         if (lock.get(x, y) || globalLock) {
@@ -71,7 +71,7 @@ public class NonogramGame {
 
     private void lockFlipOnClickAlg(int x, int y) {
         throwWhenGameNotCreated();
-        if (x < 0 || y < 0 || x >= ox || x >= oy) {
+        if (x < 0 || y < 0 || x >= ox || y >= oy) {
             return;
         }
         if (globalLock) {

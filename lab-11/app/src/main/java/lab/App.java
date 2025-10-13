@@ -13,7 +13,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import nonogram.BitGrid;
 import nonogram.Nonogram;
 import nonogram.NonogramGame;
 
@@ -24,7 +23,6 @@ public class App extends Application {
         var loadButton = new Button("Выбрать файл");
 
         var game = new NonogramGame(new GridPaneScreen(gridPane));
-        // game.create(nonogram);
         loadButton.setOnAction(e -> {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Выберите файл");

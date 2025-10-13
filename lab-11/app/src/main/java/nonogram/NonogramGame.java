@@ -1,84 +1,143 @@
 package nonogram;
 
-import java.util.BitSet;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.function.BiFunction;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
-public class NonogramGame extends Nonogram {
-    protected BitSet refImage = new BitSet(0);
-    protected int diffImages = 0;
+public class NonogramGame {
+    private GridScreen screen;
+
+    private Nonogram ref;
+    private BitGrid field;
+    private BitGrid lock;
+    private boolean globalLock = false;
+    private int diff;
+    private int ox, oy;
+    private int oxHintsShift, oyHintsShift;
 
     public NonogramGame(GridScreen screen) {
-        super(screen);
+        this.screen = screen;
     }
 
-    public void create(BitSet refImage, Integer ox, Integer oy) {
-        super.create(new BitSet(refImage.size()), ox, oy);
+    public void create(Nonogram nonogram) {
+        if (nonogram == null) {
+            throw new IllegalArgumentException("nonogarm can not be empty");
+        }
+        ref = nonogram.clone();
+        field = new BitGrid(ref.getOx(), ref.getOy());
+        lock = new BitGrid(ref.getOx(), ref.getOy());
+        diff = nonogram.cardinality();
+        ox = ref.getOx();
+        oy = ref.getOy();
 
-        this.refImage = (BitSet) refImage.clone();
-        this.diffImages = refImage.cardinality();
-
-        List<List<Integer>> xHints = IntStream.range(0, oy)
-                .mapToObj(y -> countContinuous(ox, x -> refState(x, y)))
-                .collect(Collectors.toList());
-        List<List<Integer>> yHints = IntStream.range(0, ox)
-                .mapToObj(x -> countContinuous(oy, y -> refState(x, y)))
-                .collect(Collectors.toList());
-        oxHintsShift = xHints.stream().mapToInt(List::size).max().orElse(0);
-        oyHintsShift = yHints.stream().mapToInt(List::size).max().orElse(0);
+        var hintsShift = nonogram.getLongestHint();
+        oxHintsShift = hintsShift.getKey();
+        oyHintsShift = hintsShift.getValue();
 
         screen.blank(ox + oxHintsShift, oy + oyHintsShift);
 
+        var hints = nonogram.getHints();
+        drawAllHints(hints.getKey(), hints.getValue());
+
+        screen.setOnCellClick(
+                (Integer x, Integer y) -> flipOnClickAlg(x - oxHintsShift, y - oyHintsShift),
+                (Integer x, Integer y) -> lockFlipOnClickAlg(x - oxHintsShift, y - oyHintsShift));
+    }
+
+    public boolean isWon() {
+        return diff == 0;
+    }
+
+    private void flipOnClickAlg(int x, int y) {
+        throwWhenGameNotCreated();
+        if (x < 0 || y < 0 || x >= ox || x >= oy) {
+            return;
+        }
+        if (lock.get(x, y) || globalLock) {
+            return;
+        }
+        if (isWon()) {
+            wonAnimation();
+            return;
+        }
+        flip(x, y);
+        if (isWon()) {
+            wonAnimation();
+            return;
+        }
+    }
+
+    private void lockFlipOnClickAlg(int x, int y) {
+        throwWhenGameNotCreated();
+        if (x < 0 || y < 0 || x >= ox || x >= oy) {
+            return;
+        }
+        if (globalLock) {
+            return;
+        }
+        lockFlip(x, y);
+    }
+
+    private void flip(int x, int y) {
+        throwWhenGameNotCreated();
+        var newState = !field.get(x, y);
+        field.set(x, y, newState);
+        diff += newState == ref.get(x, y) ? -1 : +1;
+        screen.set(oxHintsShift + x, oyHintsShift + y, newState);
+    }
+
+    private void lockFlip(int x, int y) {
+        throwWhenGameNotCreated();
+        var newState = !lock.get(x, y);
+        lock.set(x, y, newState);
+        screen.setLock(oxHintsShift + x, oyHintsShift + y, newState);
+    }
+
+    private void throwWhenGameNotCreated() {
+        if (ref == null) {
+            throw new IllegalStateException("Game not created");
+        }
+    }
+
+    private void drawAllHints(int[][] oxHints, int[][] oyHints) {
         drawHints(
-                xHints,
-                oxHintsShift,
-                (Integer line, Integer pos) -> pos,
-                (Integer line, Integer pos) -> oyHintsShift + line);
-        drawHints(
-                yHints,
+                oxHints,
                 oyHintsShift,
                 (Integer line, Integer pos) -> oxHintsShift + line,
                 (Integer line, Integer pos) -> pos);
-
-        screen.setOnCellClick((Integer x, Integer y) -> swapOrWin(x - oxHintsShift, y - oyHintsShift));
+        drawHints(
+                oyHints,
+                oxHintsShift,
+                (Integer line, Integer pos) -> pos,
+                (Integer line, Integer pos) -> oyHintsShift + line);
     }
 
-    public void swapOrWin(int x, int y) {
-        if (isWon()) {
-            wonAnimation();
-            return;
+    private void drawHints(
+            int[][] hints,
+            int primaryShift,
+            BiFunction<Integer, Integer, Integer> screenXFunc,
+            BiFunction<Integer, Integer, Integer> screenYFunc) {
+        for (int i = 0; i < hints.length; i++) {
+            var line = hints[i];
+            if (line == null)
+                continue;
+            for (int j = 0; j < line.length; j++) {
+                int pos = primaryShift - line.length + j;
+                int sx = screenXFunc.apply(i, pos);
+                int sy = screenYFunc.apply(i, pos);
+                screen.hint(sx, sy, line[j]);
+            }
         }
-        swap(x, y);
-        if (isWon()) {
-            wonAnimation();
-            return;
-        }
-    }
-
-    public void swap(int x, int y) {
-        super.swap(x, y);
-        diffImages += state(x, y) == refState(x, y) ? -1 : +1;
-    }
-
-    public Boolean isWon() {
-        return diffImages == 0;
-    }
-
-    private boolean refState(int x, int y) {
-        return refImage.get(y * ox + x);
     }
 
     private void wonAnimation() {
         final double baseDelayMs = 40;
         final double gapABetweenWavesMs = 150;
 
+        globalLock = true;
         Timeline timeline = new Timeline();
-
         for (int i = 0; i < 4; i++) {
             for (int x = 0; x < ox; x++) {
                 for (int y = 0; y < oy; y++) {
@@ -88,12 +147,11 @@ public class NonogramGame extends Nonogram {
                     double delay = baseDelayMs * distance + Math.pow(2, i) * gapABetweenWavesMs;
                     timeline.getKeyFrames().add(
                             new KeyFrame(Duration.millis(delay),
-                                    e -> swap(fx, fy)));
+                                    e -> flip(fx, fy)));
                 }
             }
         }
-
+        timeline.setOnFinished(e -> globalLock = false);
         timeline.play();
     }
-
 }

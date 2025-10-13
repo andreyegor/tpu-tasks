@@ -1,43 +1,103 @@
 package nonogram;
 
 import java.util.ArrayList;
-import java.util.BitSet;
+import java.util.Arrays;
 import java.util.List;
-import java.util.function.BiFunction;
+import java.util.function.Function;
 import java.util.function.IntPredicate;
+import java.util.stream.IntStream;
 
-public class Nonogram {
-    protected GridScreen screen;
-    protected BitSet image = new BitSet(0);
-    protected Integer ox = 0, oy = 0;
-    protected Integer oxHintsShift = 0, oyHintsShift = 0;
+import javafx.util.Pair;
 
-    public Nonogram(GridScreen screen) {
-        this.screen = screen;
+public class Nonogram implements Cloneable {
+    protected BitGrid nonogram;
+    protected Hints hints;
+
+    public Nonogram(BitGrid nonogram) {
+        if (nonogram == null) {
+            throw new IllegalArgumentException("nongarm can not be empty");
+        }
+        this.nonogram = (BitGrid) nonogram.clone();
+
+        int ox = nonogram.getOx(), oy = nonogram.getOx();
+        this.hints = new Hints(new int[ox][(int) Math.ceil(oy / 2.0)], new int[oy][(int) Math.ceil(ox / 2.0)]);
+
+        IntStream.range(0, ox).forEach(i -> updateHints(i, 0));
+        IntStream.range(0, oy).forEach(i -> updateHints(0, i));
     }
 
-    protected void create(BitSet image, Integer ox, Integer oy) {
-        this.ox = ox;
-        this.oy = oy;
-        this.image = (BitSet) image.clone();
-
+    public Pair<int[], int[]> set(int x, int y, boolean state) {
+        nonogram.set(x, y, state);
+        updateHints(x, y);
+        return new Pair<int[], int[]>(trimTrailingZeros(hints.ox[x]), trimTrailingZeros(hints.oy[y]));
     }
 
-    public void swap(int x, int y) {
-        var newState = !state(x, y);
-        set(x, y, newState);
-        screen.set(oxHintsShift+x, oyHintsShift+y, newState);
+    public boolean get(int x, int y) {
+        return nonogram.get(x, y);
     }
 
-    protected boolean state(int x, int y) {
-        return image.get(y * ox + x);
+    public Pair<Integer, Integer> getLongestHint() {
+        Function<int[][], Integer> findMax = (m -> Arrays
+                .stream(m)
+                .mapToInt(r -> IntStream.range(0, r.length)
+                        .filter(i -> r[i] != 0)
+                        .max().orElse(-1))
+                .max().orElse(-1));
+
+        return new Pair<Integer, Integer>(findMax.apply(hints.ox), findMax.apply(hints.oy));
     }
 
-    protected void set(int x, int y, boolean state) {
-        image.set(y * ox + x, state);
+    public int getOx() {
+        return nonogram.getOx();
     }
 
-    protected List<Integer> countContinuous(int size, IntPredicate filled) {
+    public int getOy() {
+        return nonogram.getOy();
+    }
+
+    public Pair<int[][], int[][]> getHints() {
+        Function<int[][], int[][]> trimAllTrailingZeros = m -> Arrays.stream(m)
+                .map(r -> trimTrailingZeros(r))
+                .toArray(int[][]::new);
+
+        return new Pair<int[][], int[][]>(
+                trimAllTrailingZeros.apply(hints.ox),
+                trimAllTrailingZeros.apply(hints.oy));
+    }
+
+    public int cardinality() {
+        return nonogram.cardinality();
+    }
+
+    public String serialize() {
+        return nonogram.serialize();
+    }
+
+    public static Nonogram deserialize(String s) {
+        return new Nonogram(BitGrid.deserialize(s));
+    }
+
+    protected void updateHints(int x, int y) {
+        if (hints == null)
+            return;
+        var row = countContinuous(nonogram.getOx(), i -> nonogram.get(i, y));
+        var col = countContinuous(nonogram.getOy(), i -> nonogram.get(x, i));
+
+        hints.oy[y] = new int[hints.oy[y].length];
+        hints.ox[x] = new int[hints.ox[x].length];
+
+        IntStream.range(0, row.length).forEach(i -> hints.oy[y][i] = row[i]);
+        IntStream.range(0, col.length).forEach(i -> hints.ox[x][i] = col[i]);
+    }
+
+    private int[] trimTrailingZeros(int[] m) {
+        int l = IntStream
+                .iterate(m.length - 1, i -> i >= 0, i -> i - 1)
+                .filter(i -> m[i] != 0).findFirst().orElse(-1);
+        return l == -1 ? new int[0] : Arrays.copyOfRange(m, 0, l + 1);
+    }
+
+    private int[] countContinuous(int size, IntPredicate filled) {
         List<Integer> res = new ArrayList<>();
         int cnt = 0;
         for (int i = 0; i < size; i++) {
@@ -50,53 +110,24 @@ public class Nonogram {
         }
         if (cnt > 0)
             res.add(cnt);
-        return res;
+        return res.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    protected void drawHints(
-            List<List<Integer>> hints,
-            int primaryShift,
-            BiFunction<Integer, Integer, Integer> screenXFunc,
-            BiFunction<Integer, Integer, Integer> screenYFunc) {
-        for (int line = 0; line < hints.size(); line++) {
-            List<Integer> list = hints.get(line);
-            if (list == null || list.isEmpty())
-                continue;
-            int hintCount = list.size();
-            int start = primaryShift - hintCount;
-            for (int i = 0; i < hintCount; i++) {
-                int pos = start + i;
-                int sx = screenXFunc.apply(line, pos);
-                int sy = screenYFunc.apply(line, pos);
-                screen.hint(sx, sy, list.get(i));
+    public Nonogram clone() {
+        try {
+            return (Nonogram) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException("0_0", e);
+        }
+    }
+
+    private record Hints(int[][] ox, int[][] oy) implements Cloneable {
+        public Hints clone() {
+            try {
+                return (Hints) super.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException("0_0", e);
             }
         }
-    }
-
-    public String serialize() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(ox != null ? ox : 0).append(" ");
-        sb.append(oy != null ? oy : 0).append(" ");
-        long[] arr = image.toLongArray();
-        for (int i = 0; i < arr.length; i++) {
-            sb.append(arr[i]);
-            if (i < arr.length - 1)
-                sb.append(" ");
-        }
-        return sb.toString();
-    }
-
-    public void deserialize(String s) {
-        String[] tokens = s.split(" ");
-        if (tokens.length < 2)
-            throw new IllegalArgumentException();
-        Integer ox = Integer.parseInt(tokens[0]);
-        Integer oy = Integer.parseInt(tokens[1]);
-        long[] arr = new long[Math.max(0, tokens.length - 2)];
-        for (int i = 2; i < tokens.length; i++) {
-            arr[i - 2] = Long.parseLong(tokens[i]);
-        }
-        BitSet image = BitSet.valueOf(arr);
-        create(image, ox, oy);
     }
 }

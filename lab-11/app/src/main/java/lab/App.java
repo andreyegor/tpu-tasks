@@ -1,33 +1,54 @@
 package lab;
 
-import java.util.BitSet;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import nonogram.BitGrid;
+import nonogram.Nonogram;
 import nonogram.NonogramGame;
 
 public class App extends Application {
     @Override
     public void start(Stage stage) {
-        int ox = 10, oy = 10;
-        var image = new BitSet(ox * oy);
-        for (int y = 0; y < oy; y++) {
-            for (int x = 0; x < ox; x++) {
-                if ((x + y) % 2 == 0) {
-                    image.set(y * ox + x);
-                }
+        var gridPane = new GridPane();
+        var loadButton = new Button("Выбрать файл");
+
+        var game = new NonogramGame(new GridPaneScreen(gridPane));
+        // game.create(nonogram);
+        loadButton.setOnAction(e -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Выберите файл");
+            String currentDir = System.getProperty("user.dir");
+            fileChooser.setInitialDirectory(new File(currentDir));
+            File file = fileChooser.showOpenDialog(stage);
+            try {
+                var fis = new FileInputStream(file);
+                var s = new String(fis.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8);
+                fis.close();
+                game.create(Nonogram.deserialize(s));
+            } catch (FileNotFoundException err) {
+                return;
+            } catch (IOException err) {
+                return;
             }
-        }
+        });
 
-        var grid = new GridPane();
-        var gridScreen = new GridPaneScreen(grid);
+        var pane = new Pane();
+        pane.setPrefSize(500, 500);
+        gridPane.add(pane, 0, 0);
 
-        var nonogram = new NonogramGame(gridScreen);
-        nonogram.create(image, ox, oy);
-
-        Scene scene = new Scene(grid);
+        VBox root = new VBox(10, gridPane, loadButton);
+        Scene scene = new Scene(root);
         stage.setTitle("Разгадываем штуки");
         stage.setScene(scene);
         stage.show();

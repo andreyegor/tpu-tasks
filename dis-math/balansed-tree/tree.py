@@ -14,14 +14,14 @@ class Tree:
 
     def __iter__(self) -> any:
         for node in self.__dfs(self._root):
-            yield node
+            yield node.key
 
     def __getitem__(self, index: int) -> Any:
         if not isinstance(index, int):
             raise TypeError("Index must be an integer")
         for i, node in enumerate(self):
             if i == index:
-                return node.key
+                return node
         raise IndexError("Index out of range")
 
     def __contains__(self, item) -> bool:

@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import javafx.scene.canvas.Canvas;
 
 public class App extends Application {
+    private final int CANVAS_MIN_SIZE = 300, CANVAS_MAX_SIZE = 600;
     private int size;
     private int bombs;
     private boolean[][] bombGrid;
@@ -66,7 +67,7 @@ public class App extends Application {
                 }
             }
 
-            int canvasSize = Math.max(300, Math.min(800, size * 20));
+            int canvasSize = Math.max(CANVAS_MIN_SIZE, Math.min(CANVAS_MAX_SIZE, size * 20));
             canvas = new Canvas(canvasSize, canvasSize);
             canvas.setOnMouseClicked(e -> handleClick(e));
             var root = new GridPane();
@@ -85,6 +86,20 @@ public class App extends Application {
     private void showError(String message) {
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
                 javafx.scene.control.Alert.AlertType.ERROR,
+                message);
+        alert.showAndWait();
+    }
+
+    private void showLooseMsg(String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+                javafx.scene.control.Alert.AlertType.WARNING,
+                message);
+        alert.showAndWait();
+    }
+
+    private void showWinMsg(String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+                javafx.scene.control.Alert.AlertType.CONFIRMATION,
                 message);
         alert.showAndWait();
     }
@@ -131,7 +146,7 @@ public class App extends Application {
             statusGrid[x][y] = -3;
             revealAllBombs();
             drawGame();
-            showError("Вы проиграли!");
+            showLooseMsg("Вы проиграли!");
             return;
         }
 
@@ -188,7 +203,7 @@ public class App extends Application {
             if (checkWin()) {
                 revealAllBombs();
                 drawGame();
-                showError("Победа!");
+                showWinMsg("Победа!");
                 return;
             }
         } else if (e.getButton() == javafx.scene.input.MouseButton.SECONDARY) {
@@ -200,35 +215,44 @@ public class App extends Application {
     private void drawGame() {
         var grc = canvas.getGraphicsContext2D();
         int cellSize = (int) (canvas.getWidth() / size);
+
         grc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
                 double px = x * cellSize, py = y * cellSize;
                 if (statusGrid[x][y] >= 0) {
-                    grc.setFill(javafx.scene.paint.Color.LIGHTGRAY);
+                    grc.setFill(javafx.scene.paint.Color.DARKGRAY);
                 } else {
-                    grc.setFill(javafx.scene.paint.Color.WHITE);
+                    grc.setFill(new javafx.scene.paint.LinearGradient(
+                            x * cellSize, y * cellSize,
+                            (x + 1) * cellSize, (y + 1) * cellSize,
+                            false,
+                            javafx.scene.paint.CycleMethod.NO_CYCLE,
+                            new javafx.scene.paint.Stop(0, javafx.scene.paint.Color.WHITE),
+                            new javafx.scene.paint.Stop(1, javafx.scene.paint.Color.GRAY)));
                 }
                 grc.fillRect(px, py, cellSize, cellSize);
-                grc.setStroke(javafx.scene.paint.Color.GRAY);
+                grc.setStroke(javafx.scene.paint.Color.WHITE);
                 grc.strokeRect(px, py, cellSize, cellSize);
 
                 if (statusGrid[x][y] == -2) {
+                    grc.setFont(new javafx.scene.text.Font(cellSize * 0.5));
                     grc.setFill(javafx.scene.paint.Color.RED);
-                    grc.fillText("F", px + cellSize / 2 - 5, py + cellSize / 2 + 5);
+                    grc.fillText("🚩", px + cellSize * 0.25, py + cellSize * 0.75);
                     continue;
                 }
 
                 if (statusGrid[x][y] == -3) {
+                    grc.setFont(new javafx.scene.text.Font(cellSize * 0.5));
                     grc.setFill(javafx.scene.paint.Color.BLACK);
-                    grc.fillOval(px + 5, py + 5, cellSize - 10, cellSize - 10);
+                    grc.fillText("💣", px + cellSize * 0.25, py + cellSize * 0.75);
                     continue;
                 }
 
                 if (statusGrid[x][y] > 0) {
                     grc.setFill(javafx.scene.paint.Color.BLUE);
-                    grc.setFont(new javafx.scene.text.Font(Math.max(12, cellSize / 2)));
-                    grc.fillText(Integer.toString(statusGrid[x][y]), px + cellSize / 2 - 5, py + cellSize / 2 + 5);
+                    grc.setFont(new javafx.scene.text.Font(cellSize * 0.5));
+                    grc.fillText(Integer.toString(statusGrid[x][y]), px + cellSize * 0.25, py + cellSize * 0.75);
                 }
             }
         }

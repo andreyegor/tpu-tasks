@@ -1,0 +1,13 @@
+package lab.core.model.field;
+
+public sealed interface State permits Fog, Bomb, Clear {
+}
+
+public record Fog() implements State { }
+
+public record Bomb() implements State { }
+
+public record Clear(int nearby) implements State { }
+
+
+// Почему java, почему нельзя прям так 😭😭😭

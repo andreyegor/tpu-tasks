@@ -1,4 +1,4 @@
-package Figures;
+package figures;
 
 abstract class ClosePoints extends Points implements CloseFigure {
     protected double perimeter, area;

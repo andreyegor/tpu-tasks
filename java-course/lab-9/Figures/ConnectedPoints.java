@@ -1,4 +1,4 @@
-package Figures;
+package figures;
 
 abstract class ConnectedPoints extends Points implements OpenFigure {
     final double length;

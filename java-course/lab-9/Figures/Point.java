@@ -1,4 +1,4 @@
-package Figures;
+package figures;
 
 import java.util.Objects;
 

@@ -4,7 +4,7 @@ import java.util.Map;
 
 import Serialize.CustomSerializable;
 import Serialize.Serializable;
-import Serialize.Core.DeserializeCore;
+import Serialize.core.DeserializeCore;
 
 import java.util.HashMap;
 import java.util.List;

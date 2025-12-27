@@ -1,4 +1,4 @@
-package Serialize.Core;
+package Serialize.core;
 
 public interface SerializeCore {
     String serialize(Object obj);

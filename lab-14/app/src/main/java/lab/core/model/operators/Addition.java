@@ -1,0 +1,18 @@
+package lab.core.model.operators;
+
+public class Addition extends BinaryOperation {
+    @Override
+    public double execute(double... operands) {
+        return operands[0] + operands[1];
+    }
+    
+    @Override
+    public int getPriority() {
+        return 1;
+    }
+    
+    @Override
+    public char getSymbol() {
+        return '+';
+    }
+}

@@ -1,9 +1,10 @@
-# Code editors
+# Code editors etс
 .vs/
 .vscode/
 .metals/
 .scala-build/
 .bsp/
+.scalafmt.conf
 
 # Build output
 obj/
@@ -15,3 +16,4 @@ bin/
 # Unreal Engine 4
 Saved/
 Intermediate/
+

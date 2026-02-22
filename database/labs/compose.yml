@@ -1,9 +1,9 @@
 services:
   postgres:
-    image: postgres
+    image: postgres:18
     restart: always
     volumes:
-      - pgdata:/var/lib/postgresql
+      - "pgdata:/var/lib/postgresql"
       - "./init-db:/docker-entrypoint-initdb.d"
     environment:
       - "POSTGRES_USER=docker"
@@ -12,10 +12,10 @@ services:
     ports:
       - "5432:5432"
   dbgate:
-    image: dbgate/dbgate
+    image: dbgate/dbgate:7.0.6
     restart: always
     ports:
-      - "8080:3000"
+      - "3000:3000"
     environment:
       CONNECTIONS: pg1
       LABEL_pg1: PostgreSQL
@@ -26,6 +26,7 @@ services:
       ENGINE_pg1: postgres@dbgate-plugin-postgres
     volumes:
       - dbgate_data:/root/.dbgate
+      - ./solutions:/root/.dbgate/files/sql
 volumes:
   pgdata:
   dbgate_data:

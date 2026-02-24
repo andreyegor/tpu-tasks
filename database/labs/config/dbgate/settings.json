@@ -1,0 +1,9 @@
+{
+  "commands": {
+    "query.formatCode": {
+      "keyText": "Alt+F",
+      "customKeyboardShortcut": true
+    }
+  },
+  "sqlEditor.showTableAliasesInCodeCompletion": true
+}

@@ -27,6 +27,7 @@ services:
     volumes:
       - dbgate_data:/root/.dbgate
       - ./solutions:/root/.dbgate/files/sql
+      - ./config/dbgate/settings.json:/root/.dbgate/settings.json
 volumes:
   pgdata:
   dbgate_data:

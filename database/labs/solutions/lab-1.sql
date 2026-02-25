@@ -79,3 +79,10 @@ WHERE
   AND email LIKE '%ы_%' ESCAPE 'ы'
 ORDER BY
   full_name;
+-- Вывести список сотрудников, у которых id>150
+SELECT
+  DISTINCT FORMAT('%s %s', first_name, last_name) as full_name
+FROM
+  hr.employees
+where
+  employee_id>150;

@@ -9,6 +9,7 @@ SELECT
         hr.dependents ds
       WHERE
         es.employee_id = ds.employee_id
+        AND ds.relationship = 'Child'
     ) THEN 'Есть дети'
     ELSE 'Нет детей'
   END as Childs
@@ -42,29 +43,36 @@ WITH salary AS (
 )
 SELECT
   ds.department_name,
-  CASE
-    WHEN AVG(salary) < (
-      SELECT
-        average
-      FROM
-        salary
-    ) THEN AVG(salary)
-    ELSE Null
-  END
+  AVG(salary)
+END
 FROM
   hr.employees es
   JOIN hr.departments ds ON es.department_id = ds.department_id
+  JOIN salary ON true
 GROUP BY
-  ds.department_name;
+  ds.department_name,
+  salary.average
+HAVING
+  AVG(es.salary) < salary.average;
 -- Вывести полное имя и должности всех сотрудников, у которых минимальная зарплата по должности больше 9 000.
+WITH salary AS (
+  SELECT
+    job_id,
+    MIN(salary) as mn
+  FROM
+    hr.employees
+  GROUP BY
+    job_id
+)
 SELECT
   format('%s %s', es.first_name, es.last_name) AS full_name,
   js.job_title
 FROM
   hr.employees es
   JOIN hr.jobs js ON js.job_id = es.job_id
+  JOIN salary sl ON sl.job_id = es.job_id
 WHERE
-  js.min_salary > 9000;
+  sl.mn > 9000;
 -- Вывести сотрудников, у которых ЗП (заработная плата) больше максимальной ЗП любого отдела, в котором работает 8 человек.
 WITH department_stats AS (
   SELECT
@@ -88,42 +96,28 @@ SELECT
   FORMAT('%s %s', es.first_name, es.last_name) AS full_name
 FROM
   hr.employees es
+  join max_salary_for_8 ON true
 WHERE
-  es.salary > (
-    SELECT
-      max_salary
-    FROM
-      max_salary_for_8
-  );
+  es.salary > max_salary_for_8.max_salary;
 -- Вывести полное имя и id сотрудников, у которых кол-во детей больше или равно количеству детей у сотрудника с id =203 (или 109).
-WITH target_kids_cnt AS (
-  SELECT
-    MIN(kids_count) AS min_kids -- Берём минимальное количество детей, оно учтёт и все большие значения
-  FROM
-    (
-      SELECT
-        es.employee_id,
-        COUNT(ds.employee_id) AS kids_count
-      FROM
-        hr.employees es
-        LEFT JOIN hr.dependents ds ON es.employee_id = ds.employee_id
-        AND ds.relationship = 'Child'
-      WHERE
-        es.employee_id IN (203, 109)
-      GROUP BY
-        es.employee_id
-    ) -- У сотрудника может быть и 0 детей (у 109 и есть). Это тоже нужно учитывать
-),
-employee_kids AS (
+WITH employee_kids AS (
   SELECT
     es.employee_id,
     COUNT(ds.employee_id) AS kids_count
   FROM
     hr.employees es
     LEFT JOIN hr.dependents ds ON es.employee_id = ds.employee_id
-    AND ds.relationship = 'Child'
+    AND ds.relationship = 'Child' -- У сотрудника может быть и 0 детей (у 109 и есть). Это тоже нужно учитывать
   GROUP BY
     es.employee_id
+),
+target_kids_cnt AS (
+  SELECT
+    MIN(kids_count) AS min_kids -- Берём минимальное количество детей, оно учтёт и все большие значения
+  FROM
+    employee_kids
+  WHERE
+    employee_id IN (203, 109)
 )
 SELECT
   es.employee_id,
@@ -186,15 +180,7 @@ SELECT
   FORMAT(
     '%s years',
     ROUND(
-      EXTRACT(
-        YEAR
-        FROM
-          AGE(CURRENT_DATE, es.hire_date)
-      ) + EXTRACT(
-        MONTH
-        FROM
-          AGE(CURRENT_DATE, es.hire_date)
-      ) / 12.0,
+      (current_date - es.hire_date) / 365.0,
       1
     )
   ) AS experience
@@ -210,6 +196,7 @@ FROM
       department_id
   ) department_experience ON es.department_id = department_experience.department_id
   AND CURRENT_DATE - es.hire_date > department_experience.average;
+-- оптимизирует ли?
 -- Вывести сотрудников (id, имя и фамилию), чья зарплата выше средней по их отделу. Реализовать 2 способами, один из которых с помощью коррелированного подзапроса, второй без.
 SELECT
   es.employee_id,
@@ -261,4 +248,16 @@ SELECT
   eds.department_name
 FROM
   hr.employees es
-  JOIN european_departments eds ON eds.department_id = es.department_id
+  JOIN european_departments eds ON eds.department_id = es.department_id;
+-- Вывести фамилию людей у которых зарплата выше средней
+SELECT
+  last_name
+FROM
+  hr.employees
+WHERE
+  salary > (
+    SELECT
+      AVG(salary)
+    from
+      hr.employees
+  );

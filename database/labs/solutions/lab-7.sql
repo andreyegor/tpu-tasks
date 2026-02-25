@@ -53,9 +53,9 @@ SELECT
   ) AS subordinates
 FROM
   managers ms
-  JOIN hr.employees es ON es.manager_id = ms.employee_id
+  LEFT JOIN hr.employees es ON es.manager_id = ms.employee_id
 WHERE
-  ms.employee_level = 2
+  ms.employee_level = 1
 GROUP BY
   ms.full_name;
 -- Придумайте свой запрос с указанием пути иерархии.
@@ -145,7 +145,7 @@ tree AS (
 SELECT
   string_agg(
     output,
-    E '\n' -- Только для escape вроде
+    E'\n' -- Только для escape вроде
     ORDER BY
       output_order
   ) AS output

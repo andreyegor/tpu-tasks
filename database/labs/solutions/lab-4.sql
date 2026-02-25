@@ -39,6 +39,8 @@ SELECT
   STRING_AGG(FORMAT('%s - %s', last_name, employee_id), ', ')
 FROM
   hr.employees
+WHERE
+  department_id IS NOT NULL
 GROUP BY
   department_id
 HAVING
@@ -59,22 +61,21 @@ SELECT
   ),
   MIN(salary),
   MAX(salary),
-  AVG(salary)
+  ROUND(AVG(salary), 2)
 FROM
   hr.employees
 GROUP BY
   department_id;
 -- Придумать 2 запроса самостоятельно с агрегацией данных.
 SELECT
-  js.job_title,
+  job_id,
   MIN(salary),
   MAX(salary),
   AVG(salary)
 FROM
   hr.employees
-  JOIN hr.jobs js ON hr.employees.job_id = js.job_id
 GROUP BY
-  js.job_title;
+  job_id;
 SELECT
   EXTRACT(
     'year'
@@ -90,3 +91,11 @@ GROUP BY
   experience;
 ORDER BY
   experience;
+-- Сколько человек в каждом отделе
+SELECT
+  department_id,
+  count(*)
+FROM
+  hr.employees
+GROUP BY
+  department_id;

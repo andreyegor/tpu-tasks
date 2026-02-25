@@ -15,21 +15,15 @@ WHERE
     FROM
       hire_date
   ) = 5
-  AND (
-    EXTRACT(
-      'year'
-      FROM
-        hire_date
-    ) BETWEEN 1990
-    AND 1995
-  );
+  AND hire_date BETWEEN '1990-01-01'
+  AND '1995-12-31';
 -- Узнать, сколько дней осталось до конца года, если считать от даты трудоустройства сотрудника и до 1 января следующего года.
 SELECT
   EXTRACT(
     'days'
     FROM
       (
-        DATE_TRUNC('year', CURRENT_DATE) + INTERVAL '1 year' - hire_date
+        DATE_TRUNC('year', hire_date) + INTERVAL '1 year' - hire_date
       )
   )
 FROM
@@ -51,7 +45,7 @@ WHERE
 SELECT
   first_name || ' ' || last_name as full_name,
   TO_CHAR(hire_date, 'DD-TMMonth-YYYY') as hire_date,
-  AGE(CURRENT_DATE, hire_date) :: TEXT as experience
+  AGE(hire_date) :: TEXT as experience
 FROM
   hr.employees
 WHERE
@@ -104,3 +98,6 @@ WHERE
     FROM
       AGE(CURRENT_DATE, hire_date)
   ) < LENGTH(first_name) * 3;
+-- Вывести название следующего месяца
+SELECT
+  TO_CHAR(current_date + INTERVAL '1 month', 'TMMonth')

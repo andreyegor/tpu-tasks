@@ -1,0 +1,5 @@
+pdf-engine: xelatex
+variables:
+  mainfont: Lato
+  monofont: Fira Code
+  geometry: margin=1.5cm

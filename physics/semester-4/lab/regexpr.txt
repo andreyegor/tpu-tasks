@@ -1,0 +1,6 @@
+заменить
+\$\$\n(.*?)\n\$\$
+на
+\begin{equation}
+$1
+\end{equation}

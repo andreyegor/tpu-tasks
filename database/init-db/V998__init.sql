@@ -63,4 +63,4 @@ CREATE TABLE hr.dependents (
     relationship character varying(25) NOT NULL,
     employee_id integer NOT NULL,
     CONSTRAINT dependents_employee_id_fk FOREIGN KEY (employee_id) REFERENCES hr.employees(employee_id) ON UPDATE CASCADE ON DELETE CASCADE
-);
+);b

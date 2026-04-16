@@ -2,13 +2,18 @@
 SELECT
   ds.department_id,
   ds.department_name,
+  rs.region_name,
   max(es.salary) as max_salary
 FROM
   hr.departments ds
   JOIN hr.employees es ON es.department_id = ds.department_id
+  LEFT JOIN hr.locations ls ON ls.location_id = ds.location_id
+  LEFT JOIN hr.countries cs ON cs.country_id = ls.country_id
+  LEFT JOIN hr.regions rs ON rs.region_id = cs.region_id
 GROUP BY
   ds.department_id,
-  ds.department_name
+  ds.department_name,
+  rs.region_name
 HAVING
   max(es.salary) > 12000;
 -- Получите список всех отделов и сотрудников, включая отделы без сотрудников (используйте команду USING при соединении таблиц).
@@ -37,10 +42,10 @@ SELECT
   ) as employees
 FROM
   hr.departments ds
-  JOIN hr.employees es ON es.department_id = ds.department_id
-  JOIN hr.locations ls ON ls.location_id = ds.location_id
-  JOIN hr.countries cs ON cs.country_id = ls.country_id
-  JOIN hr.regions rs ON rs.region_id = cs.region_id
+  LEFT JOIN hr.employees es ON es.department_id = ds.department_id
+  LEFT JOIN hr.locations ls ON ls.location_id = ds.location_id
+  LEFT JOIN hr.countries cs ON cs.country_id = ls.country_id
+  LEFT JOIN hr.regions rs ON rs.region_id = cs.region_id
 GROUP BY
   ds.department_id,
   ds.department_name,
@@ -68,3 +73,13 @@ FROM
   JOIN hr.locations ls ON ls.location_id = ds.location_id
 WHERE
   lower(substr(ls.city, 1, 1)) != 's';
+-- По каждой должности посчитать количество детей
+SELECT
+  js.job_title,
+  COUNT(ds.relationship) as children_cnt
+FROM
+  hr.jobs js 
+  LEFT JOIN hr.employees es on js.job_id=es.job_id
+  LEFT JOIN hr.dependents ds on es.employee_id=ds.employee_id AND ds.relationship='Child'
+GROUP BY
+  js.job_title

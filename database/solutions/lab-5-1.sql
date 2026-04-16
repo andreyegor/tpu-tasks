@@ -63,18 +63,21 @@ SELECT
 FROM
   hr.employees
 ORDER BY
-  salary DESC;
+  salary_category,
+  full_name;
 -- Используя неявное соединение, выведите список сотрудников, работающих в отделах, расположенных в городе 'Seattle'. Отобразите полное имя сотрудника, название отдела и город, отсортируйте список по фамилии сотрудника в прямом порядке.
 SELECT
   format('%s %s', es.first_name, es.last_name) as full_name,
   ds.department_name,
   ls.city
 FROM
-  hr.employees es
-  JOIN hr.departments ds on ds.department_id = es.department_id
-  JOIN hr.locations ls on ls.location_id = ds.location_id
+  hr.employees es,
+  hr.departments ds,
+  hr.locations ls
 WHERE
-  ls.city = 'Seattle'
+  ds.department_id = es.department_id
+  AND ls.location_id = ds.location_id
+  AND ls.city = 'Seattle'
 ORDER BY
   es.last_name;
 -- Используя неявное соединение, выведите информацию о сотрудниках, их отделах, странах и регионах. Отобразите полное имя сотрудников, перечислив их через запятую, название отдела, название страны и название региона. Включите только тех сотрудников, чья зарплата превышает 11000.
@@ -87,13 +90,17 @@ SELECT
   cs.country_name as country,
   rs.region_name as region
 FROM
-  hr.employees es
-  JOIN hr.departments ds ON ds.department_id = es.department_id
-  JOIN hr.locations ls ON ls.location_id = ds.location_id
-  JOIN hr.countries cs ON cs.country_id = ls.country_id
-  JOIN hr.regions rs ON rs.region_id = cs.region_id
+  hr.employees es,
+  hr.departments ds,
+  hr.locations ls,
+  hr.countries cs,
+  hr.regions rs
 WHERE
-  es.salary > 11000
+  ds.department_id = es.department_id
+  AND ls.location_id = ds.location_id
+  AND cs.country_id = ls.country_id
+  AND rs.region_id = cs.region_id
+  AND es.salary > 11000
 GROUP BY
   ds.department_name,
   cs.country_name,
@@ -106,8 +113,8 @@ SELECT
   COUNT(dds.dependent_id)
 FROM
   hr.employees es
-  JOIN hr.departments ds ON ds.department_id = es.department_id
-  JOIN hr.locations ls ON ls.location_id = ds.location_id
+  RIGHT JOIN hr.departments ds ON ds.department_id = es.department_id
+  LEFT JOIN hr.locations ls ON ls.location_id = ds.location_id
   LEFT JOIN hr.dependents dds ON dds.employee_id = es.employee_id
   AND dds.relationship = 'Child'
 GROUP BY
@@ -125,7 +132,7 @@ SELECT
   ROUND(AVG(es.salary), 2) as avg_salary
 FROM
   hr.departments ds
-  JOIN hr.employees es ON es.department_id = ds.department_id
+  LEFT JOIN hr.employees es ON es.department_id = ds.department_id
 GROUP BY
   ds.department_name
 ORDER BY
@@ -144,4 +151,13 @@ WHERE
   es.department_id = ds.department_id
   AND ds.location_id = ls.location_id
   AND es.salary > 10000
-  AND ls.city = 'Seattle';
+  AND ls.city = 'Toronto';
+-- Напротив каждой фамилии ребёнка написать должность родителя
+SELECT
+  ds.last_name,
+  js.job_title
+FROM
+  hr.dependents ds
+  JOIN hr.employees es ON ds.employee_id = es.employee_id
+  JOIN hr.jobs js ON es.job_id = js.job_id
+  AND ds.relationship = 'Child';

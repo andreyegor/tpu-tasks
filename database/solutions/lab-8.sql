@@ -1,42 +1,32 @@
 BEGIN;
-TRUNCATE TABLE audience_places,
+TRUNCATE TABLE concert_places,
 concerts,
-venues,
-venue_types,
-locations RESTART IDENTITY CASCADE;
+venues RESTART IDENTITY CASCADE;
 CREATE TEMP TABLE test_results (
   test_name text NOT NULL,
   ok boolean NOT NULL,
   sqlstate text,
   message text
 );
-CREATE PROCEDURE pg_temp.test_expect_success(title text, query text) LANGUAGE plpgsql AS $$ 
-DECLARE 
-state text;
+CREATE PROCEDURE pg_temp.test_expect_success(title text, query text) LANGUAGE plpgsql AS $$
+DECLARE state text;
 message text;
 BEGIN EXECUTE query;
-INSERT INTO
-  test_results
-VALUES
-  (title, true, 0, 'ok');
+INSERT INTO test_results
+VALUES (title, true, 0, 'ok');
 EXCEPTION
 WHEN OTHERS THEN GET STACKED DIAGNOSTICS state = RETURNED_SQLSTATE,
 message = MESSAGE_TEXT;
-INSERT INTO
-  test_results
-VALUES
-  (title, false, state, message);
+INSERT INTO test_results
+VALUES (title, false, state, message);
 END;
 $$;
-CREATE PROCEDURE pg_temp.test_expect_error(title text, query text, target_state text) LANGUAGE plpgsql AS $$ 
-DECLARE 
-state text;
+CREATE PROCEDURE pg_temp.test_expect_error(title text, query text, target_state text) LANGUAGE plpgsql AS $$
+DECLARE state text;
 message text;
 BEGIN BEGIN EXECUTE query;
-INSERT INTO
-  test_results(test_name, ok, sqlstate, message)
-VALUES
-  (
+INSERT INTO test_results(test_name, ok, sqlstate, message)
+VALUES (
     title,
     false,
     null,
@@ -45,10 +35,8 @@ VALUES
 EXCEPTION
 WHEN OTHERS THEN GET STACKED DIAGNOSTICS state = RETURNED_SQLSTATE,
 message = MESSAGE_TEXT;
-INSERT INTO
-  test_results(test_name, OK, sqlstate, message)
-VALUES
-  (
+INSERT INTO test_results(test_name, OK, sqlstate, message)
+VALUES (
     title,
     state = target_state,
     state,
@@ -57,16 +45,13 @@ VALUES
 END;
 END;
 $$;
-CREATE PROCEDURE pg_temp.test_expect_int(title text, query text, target int) LANGUAGE plpgsql AS $$ 
-DECLARE 
-actual int;
+CREATE PROCEDURE pg_temp.test_expect_int(title text, query text, target int) LANGUAGE plpgsql AS $$
+DECLARE actual int;
 state text;
 message text;
 BEGIN EXECUTE query INTO actual;
-INSERT INTO
-  test_results
-VALUES
-  (
+INSERT INTO test_results
+VALUES (
     title,
     actual = target,
     0,
@@ -75,93 +60,175 @@ VALUES
 EXCEPTION
 WHEN OTHERS THEN GET STACKED DIAGNOSTICS state = RETURNED_SQLSTATE,
 message = MESSAGE_TEXT;
-INSERT INTO
-  test_results
-VALUES
-  (title, false, state, message);
+INSERT INTO test_results
+VALUES (title, false, state, message);
 END;
 $$;
-CALL pg_temp.test_expect_success(
-  'Корректная локация',
-  'INSERT INTO locations(location_address) VALUES (''Улица Пушкина дом Колотушкина'')'
-);
-CALL pg_temp.test_expect_success(
-  'Корректный тип площадки',
-  'INSERT INTO venue_types(venue_type_name) VALUES (''Стадион'')'
-);
-CALL pg_temp.test_expect_success(
-  'Корректная площадка',
-  'INSERT INTO venues(venue_name, location_id, venue_type_id) VALUES (''Большой Стадион'', 1, 1)'
-);
-CALL pg_temp.test_expect_success(
-  'Корректный концерт',
-  'INSERT INTO concerts(concert_name, concert_date, concert_duration_minutes, venue_id) VALUES (''Rock Night'', DATE ''2026-06-01'', 120, 1)'
-);
-CALL pg_temp.test_expect_success(
-  'Корректное место на концерте',
-  'INSERT INTO audience_places(concert_id, place_name, place_capacity, place_price, sold_places) VALUES (1, ''VIP'', 100, 2500.00, 25)'
+CALL pg_temp.test_expect_error(
+  'Нарушен констрейнт NOT NULL для названия площадки',
+  $$INSERT INTO venues(venue_name, venue_location)
+  VALUES (NULL, 'Какой-то адрес') $$,
+    '23502'
 );
 CALL pg_temp.test_expect_error(
-  'Нарушен констрейнт UNIQUE для имени типа площадки',
-  'INSERT INTO venue_types(venue_type_name) VALUES (''Стадион'')',
-  '23505'
+  'Нарушен констрейнт NOT NULL для адреса площадки',
+  $$INSERT INTO venues(venue_name, venue_location)
+  VALUES ('Площадка', NULL) $$,
+    '23502'
 );
 CALL pg_temp.test_expect_error(
-  'Нарушен констрейнт NOT NULL для адреса',
-  'INSERT INTO locations(location_address) VALUES (NULL)',
-  '23502'
+  'Нарушен констрейнт NOT NULL для уровня концерта',
+  $$INSERT INTO concerts(
+    concert_name,
+    concert_date,
+    concert_duration_minutes,
+    concert_level,
+    venue_id
+  )
+  VALUES (
+      'Концерт без уровня',
+      DATE '2026-06-01',
+      60,
+      NULL,
+      1
+    ) $$,
+    '23502'
 );
 CALL pg_temp.test_expect_error(
-  'Нарушен констрейнт FOREIGN KEY venues.location_id -> locations.location_id',
-  'INSERT INTO venues(venue_name, location_id, venue_type_id) VALUES (''Плохая улица'', 9999, 1)',
-  '23503'
+  'Нарушен констрейнт FOREIGN KEY concerts.venue_id -> venues.venue_id',
+  $$INSERT INTO concerts(
+    concert_name,
+    concert_date,
+    concert_duration_minutes,
+    concert_level,
+    venue_id
+  )
+  VALUES (
+      'Несуществующая площадка',
+      DATE '2026-06-02',
+      60,
+      'Фантастический',
+      9999
+    ) $$,
+    '23503'
 );
 CALL pg_temp.test_expect_error(
-  'Нарушен констрейнт FOREIGN KEY venues.venue_type_id -> venue_types.venue_type_id',
-  'INSERT INTO venues(venue_name, location_id, venue_type_id) VALUES ('' Плохая улица'', 1, 9999)',
-  '23503'
+  'Нарушен констрейнт FOREIGN KEY concert_places.concert_id -> concerts.concert_id',
+  $$INSERT INTO concert_places(
+    concert_id,
+    place_row,
+    place_num,
+    place_price,
+    places_sold
+  )
+  VALUES (9999, 1, 1, 100.00, false) $$,
+    '23503'
 );
 CALL pg_temp.test_expect_error(
   'Нарушен констрейнт - ненулевая продолжительность концерта',
-  'INSERT INTO concerts(concert_name, concert_date, concert_duration_minutes, venue_id) VALUES (''Плохая длина'', DATE ''2026-06-02'', 0, 1)',
-  '23514'
+  $$INSERT INTO concerts(
+    concert_name,
+    concert_date,
+    concert_duration_minutes,
+    concert_level,
+    venue_id
+  )
+  VALUES (
+      'Нулевая длина',
+      DATE '2026-06-02',
+      0,
+      'Городской',
+      1
+    ) $$,
+    '23514'
 );
 CALL pg_temp.test_expect_error(
-  'Нарушен констрейнт - неотрицательная цена',
-  'INSERT INTO audience_places(concert_id, place_name, place_capacity, place_price, sold_places) VALUES (1, ''Плохая цена'', 10, -1.00, 1)',
-  '23514'
-);
-CALL pg_temp.test_expect_error(
-  'Нарушен констрейнт - мест продано больше чем возможно',
-  'INSERT INTO audience_places(concert_id, place_name, place_capacity, place_price, sold_places) VALUES (1, ''Слишком много мест'', 10, 100.00, 11)',
-  '23514'
+  'Нарушен констрейнт - неотрицательная цена места',
+  $$INSERT INTO concert_places(
+    concert_id,
+    place_row,
+    place_num,
+    place_price,
+    places_sold
+  )
+  VALUES (1, 2, 1, -1.00, false) $$,
+    '23514'
 );
 CALL pg_temp.test_expect_error(
   'Нарушен констрейнт - запрещено удаление площадок с существующими концертами',
-  'DELETE FROM venues WHERE venue_id = 1',
-  '23001'
+  $$
+  WITH v AS (
+    INSERT INTO venues(venue_name, venue_location)
+    VALUES ('Площадка', 'Адрес')
+    RETURNING venue_id
+  )
+  INSERT INTO concerts(
+    concert_name,
+    concert_date,
+    concert_duration_minutes,
+    concert_level,
+    venue_id
+  )
+  SELECT
+    'Концерт',
+    DATE '2026-06-01',
+    60,
+    'Превосходный',
+    venue_id
+  FROM v;
+
+  DELETE FROM venues
+  WHERE venue_id = (SELECT venue_id FROM v)
+  $$,
+  '23503'
 );
 CALL pg_temp.test_expect_int(
-  'Каскадное удаление концерта',
+  'Каскадное удаление мест при удалении концерта',
   $$
-  WITH c AS (
-    INSERT INTO concerts (concert_name, concert_date, concert_duration_minutes, venue_id)
-    VALUES ('Cascade Show TEST', DATE '2026-06-03', 90, 1)
+  WITH v AS (
+    INSERT INTO venues(venue_name, venue_location)
+    VALUES ('Test venue', 'Address')
+    RETURNING venue_id
+  ),
+  c AS (
+    INSERT INTO concerts(
+      concert_name,
+      concert_date,
+      concert_duration_minutes,
+      concert_level,
+      venue_id
+    )
+    SELECT
+      'Cascade concert',
+      DATE '2026-06-03',
+      90,
+      'Level',
+      venue_id
+    FROM v
     RETURNING concert_id
+  ),
+  p AS (
+    INSERT INTO concert_places(
+      concert_id,
+      place_row,
+      place_num,
+      place_price,
+      places_sold
+    )
+    SELECT concert_id, 1, 1, 100.00, false FROM c
+  ),
+  d AS (
+    DELETE FROM concerts
+    WHERE concert_id = (SELECT concert_id FROM c)
   )
-  INSERT INTO audience_places (concert_id, place_name, place_capacity, place_price, sold_places)
-  SELECT concert_id, 'Fan Zone TEST', 200, 1200.00, 50
-  FROM c;
-  DELETE FROM concerts WHERE concert_id = 2;
-  SELECT COUNT(*) FROM audience_places WHERE concert_id = 2
+  SELECT COUNT(*)
+  FROM concert_places
+  WHERE concert_id = (SELECT concert_id FROM c)
   $$,
   0
 );
-SELECT
-  *
-FROM
-  test_results
-ORDER BY
-  ok DESC,
+SELECT *
+FROM test_results
+ORDER BY ok DESC,
   test_name;
 ROLLBACK;

@@ -170,7 +170,7 @@ R = l \cdot \frac{dn}{d\lambda},
 
 ## Ход работы
 
-### Таблица 1
+### Таблица 1 – Измерение преломляющего угла призмы
 
 \begin{tabularx}{\textwidth}{|c|X|X|X|X|X|X|}
 \hline
@@ -184,7 +184,7 @@ R = l \cdot \frac{dn}{d\lambda},
 \hline
 \end{tabularx}
 
-### Таблица 2
+### Таблица 2 – Измерение угла наименьшего отклонения для спектральных линий
 
 \begin{tabularx}{\textwidth}{|c|X|c|X|c|c|X|X|X|}
 \hline

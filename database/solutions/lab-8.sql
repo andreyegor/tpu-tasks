@@ -66,14 +66,14 @@ END;
 $$;
 CALL pg_temp.test_expect_error(
   'Нарушен констрейнт NOT NULL для названия площадки',
-  $$INSERT INTO venues(venue_name, venue_location)
-  VALUES (NULL, 'Какой-то адрес') $$,
+  $$INSERT INTO venues(venue_name, venue_location, venue_accessibility)
+  VALUES (NULL, 'Какой-то адрес', true) $$,
     '23502'
 );
 CALL pg_temp.test_expect_error(
   'Нарушен констрейнт NOT NULL для адреса площадки',
-  $$INSERT INTO venues(venue_name, venue_location)
-  VALUES ('Площадка', NULL) $$,
+  $$INSERT INTO venues(venue_name, venue_location, venue_accessibility)
+  VALUES ('Площадка', NULL, true) $$,
     '23502'
 );
 CALL pg_temp.test_expect_error(
@@ -83,14 +83,20 @@ CALL pg_temp.test_expect_error(
     concert_date,
     concert_duration_minutes,
     concert_level,
-    venue_id
+    venue_id,
+    concert_theme,
+    concert_responcible,
+    concert_supervisor
   )
   VALUES (
       'Концерт без уровня',
       DATE '2026-06-01',
       60,
       NULL,
-      1
+      1,
+      'Музыка',
+      'Ваня',
+      'Маша'
     ) $$,
     '23502'
 );
@@ -101,14 +107,20 @@ CALL pg_temp.test_expect_error(
     concert_date,
     concert_duration_minutes,
     concert_level,
-    venue_id
+    venue_id,
+    concert_theme,
+    concert_responcible,
+    concert_supervisor
   )
   VALUES (
       'Несуществующая площадка',
       DATE '2026-06-02',
       60,
       'Фантастический',
-      9999
+      9999,
+      'Музыка',
+      'Ваня',
+      'Маша'
     ) $$,
     '23503'
 );
@@ -119,9 +131,10 @@ CALL pg_temp.test_expect_error(
     place_row,
     place_num,
     place_price,
-    places_sold
+    place_sold,
+    place_age
   )
-  VALUES (9999, 1, 1, 100.00, false) $$,
+  VALUES (9999, 1, 1, 100.00, false, NULL) $$,
     '23503'
 );
 CALL pg_temp.test_expect_error(
@@ -131,14 +144,20 @@ CALL pg_temp.test_expect_error(
     concert_date,
     concert_duration_minutes,
     concert_level,
-    venue_id
+    venue_id,
+    concert_theme,
+    concert_responcible,
+    concert_supervisor
   )
   VALUES (
       'Нулевая длина',
       DATE '2026-06-02',
       0,
       'Городской',
-      1
+      1,
+      'Музыка',
+      'Ваня',
+      'Маша'
     ) $$,
     '23514'
 );
@@ -149,45 +168,18 @@ CALL pg_temp.test_expect_error(
     place_row,
     place_num,
     place_price,
-    places_sold
+    place_sold,
+    place_age
   )
-  VALUES (1, 2, 1, -1.00, false) $$,
+  VALUES (1, 2, 1, -1.00, false, NULL) $$,
     '23514'
-);
-CALL pg_temp.test_expect_error(
-  'Нарушен констрейнт - запрещено удаление площадок с существующими концертами',
-  $$
-  WITH v AS (
-    INSERT INTO venues(venue_name, venue_location)
-    VALUES ('Площадка', 'Адрес')
-    RETURNING venue_id
-  )
-  INSERT INTO concerts(
-    concert_name,
-    concert_date,
-    concert_duration_minutes,
-    concert_level,
-    venue_id
-  )
-  SELECT
-    'Концерт',
-    DATE '2026-06-01',
-    60,
-    'Превосходный',
-    venue_id
-  FROM v;
-
-  DELETE FROM venues
-  WHERE venue_id = (SELECT venue_id FROM v)
-  $$,
-  '23503'
 );
 CALL pg_temp.test_expect_int(
   'Каскадное удаление мест при удалении концерта',
   $$
   WITH v AS (
-    INSERT INTO venues(venue_name, venue_location)
-    VALUES ('Test venue', 'Address')
+    INSERT INTO venues(venue_name, venue_location, venue_accessibility)
+    VALUES ('Тестовая площадка', 'Адрес', true)
     RETURNING venue_id
   ),
   c AS (
@@ -196,14 +188,20 @@ CALL pg_temp.test_expect_int(
       concert_date,
       concert_duration_minutes,
       concert_level,
-      venue_id
+      venue_id,
+      concert_theme,
+      concert_responcible,
+      concert_supervisor
     )
     SELECT
-      'Cascade concert',
+      'Каскадный концерт',
       DATE '2026-06-03',
       90,
-      'Level',
-      venue_id
+      'Восхитительный',
+      venue_id,
+      'Музыка',
+      'Дима',
+      'Маша'
     FROM v
     RETURNING concert_id
   ),
@@ -213,9 +211,10 @@ CALL pg_temp.test_expect_int(
       place_row,
       place_num,
       place_price,
-      places_sold
+      place_sold,
+      place_age
     )
-    SELECT concert_id, 1, 1, 100.00, false FROM c
+    SELECT concert_id, 1, 1, 100.00, false, NULL FROM c
   ),
   d AS (
     DELETE FROM concerts

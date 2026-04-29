@@ -4,7 +4,6 @@ format:
   pdf:
     include-in-header:
       text: |
-        \renewcommand{\theequation}{\arabic{equation}}
 mainfont: Liberation Serif
 sansfont: Liberation Sans
 monofont: Liberation Mono
@@ -14,9 +13,11 @@ header-includes:
   - \usepackage[a4paper,top=2cm,bottom=2cm,left=3cm,right=1.5cm]{geometry}
   - \usepackage{array}
   - \usepackage{multirow}
+  - \usepackage{indentfirst}
+  - \setlength{\parindent}{2em}
+  - \renewcommand{\theequation}{\arabic{equation}}
 execute:
   echo: false
-
 ---
 
 \begin{titlepage}

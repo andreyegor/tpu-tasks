@@ -16,6 +16,13 @@ header-includes:
   - \usepackage{indentfirst}
   - \setlength{\parindent}{2em}
   - \renewcommand{\theequation}{\arabic{equation}}
+  - \usepackage{fancyhdr}
+  - \setlength{\footskip}{1cm}
+  - \pagestyle{fancy}
+  - \fancyhf{}
+  - \fancyfoot[R]{\thepage}
+  - \renewcommand{\headrulewidth}{0pt}
+  - \renewcommand{\footrulewidth}{0pt}
 execute:
   echo: false
 ---

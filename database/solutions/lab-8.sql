@@ -66,14 +66,14 @@ END;
 $$;
 CALL pg_temp.test_expect_error(
   'Нарушен констрейнт NOT NULL для названия площадки',
-  $$INSERT INTO venues(venue_name, venue_location, venue_accessibility)
-  VALUES (NULL, 'Какой-то адрес', true) $$,
+  $$INSERT INTO venues(venue_name, venue_location)
+  VALUES (NULL, 'Какой-то адрес') $$,
     '23502'
 );
 CALL pg_temp.test_expect_error(
   'Нарушен констрейнт NOT NULL для адреса площадки',
-  $$INSERT INTO venues(venue_name, venue_location, venue_accessibility)
-  VALUES ('Площадка', NULL, true) $$,
+  $$INSERT INTO venues(venue_name, venue_location)
+  VALUES ('Площадка', NULL) $$,
     '23502'
 );
 CALL pg_temp.test_expect_error(
@@ -83,20 +83,14 @@ CALL pg_temp.test_expect_error(
     concert_date,
     concert_duration_minutes,
     concert_level,
-    venue_id,
-    concert_theme,
-    concert_responcible,
-    concert_supervisor
+    venue_id
   )
   VALUES (
       'Концерт без уровня',
       DATE '2026-06-01',
       60,
       NULL,
-      1,
-      'Музыка',
-      'Ваня',
-      'Маша'
+      1
     ) $$,
     '23502'
 );
@@ -107,20 +101,14 @@ CALL pg_temp.test_expect_error(
     concert_date,
     concert_duration_minutes,
     concert_level,
-    venue_id,
-    concert_theme,
-    concert_responcible,
-    concert_supervisor
+    venue_id
   )
   VALUES (
       'Несуществующая площадка',
       DATE '2026-06-02',
       60,
       'Фантастический',
-      9999,
-      'Музыка',
-      'Ваня',
-      'Маша'
+      9999
     ) $$,
     '23503'
 );
@@ -130,11 +118,9 @@ CALL pg_temp.test_expect_error(
     concert_id,
     place_row,
     place_num,
-    place_price,
-    place_sold,
-    place_age
+    place_price
   )
-  VALUES (9999, 1, 1, 100.00, false, NULL) $$,
+  VALUES (9999, 1, 1, 100.00) $$,
     '23503'
 );
 CALL pg_temp.test_expect_error(
@@ -144,20 +130,14 @@ CALL pg_temp.test_expect_error(
     concert_date,
     concert_duration_minutes,
     concert_level,
-    venue_id,
-    concert_theme,
-    concert_responcible,
-    concert_supervisor
+    venue_id
   )
   VALUES (
       'Нулевая длина',
       DATE '2026-06-02',
       0,
       'Городской',
-      1,
-      'Музыка',
-      'Ваня',
-      'Маша'
+      1
     ) $$,
     '23514'
 );
@@ -167,19 +147,41 @@ CALL pg_temp.test_expect_error(
     concert_id,
     place_row,
     place_num,
-    place_price,
-    place_sold,
-    place_age
+    place_price
   )
-  VALUES (1, 2, 1, -1.00, false, NULL) $$,
+  VALUES (1, 2, 1, -1.00) $$,
     '23514'
+);
+CALL pg_temp.test_expect_error(
+  'Нарушен констрейнт - запрещено удаление площадок с существующими концертами',
+  $$
+  INSERT INTO venues(venue_name, venue_location)
+  VALUES ('Площадка для удаления', 'Адрес');
+  INSERT INTO concerts(
+    concert_name,
+    concert_date,
+    concert_duration_minutes,
+    concert_level,
+    venue_id
+  )
+  SELECT
+    'Концерт',
+    DATE '2026-06-01',
+    60,
+    'Превосходный',
+    (SELECT venue_id FROM venues WHERE venue_name = 'Площадка для удаления');
+
+  DELETE FROM venues
+  WHERE venue_name = 'Площадка для удаления'
+  $$,
+  '23001'
 );
 CALL pg_temp.test_expect_int(
   'Каскадное удаление мест при удалении концерта',
   $$
   WITH v AS (
-    INSERT INTO venues(venue_name, venue_location, venue_accessibility)
-    VALUES ('Тестовая площадка', 'Адрес', true)
+    INSERT INTO venues(venue_name, venue_location)
+    VALUES ('Test venue', 'Address')
     RETURNING venue_id
   ),
   c AS (
@@ -188,20 +190,14 @@ CALL pg_temp.test_expect_int(
       concert_date,
       concert_duration_minutes,
       concert_level,
-      venue_id,
-      concert_theme,
-      concert_responcible,
-      concert_supervisor
+      venue_id
     )
     SELECT
-      'Каскадный концерт',
+      'Cascade concert',
       DATE '2026-06-03',
       90,
-      'Восхитительный',
-      venue_id,
-      'Музыка',
-      'Дима',
-      'Маша'
+      'Level',
+      venue_id
     FROM v
     RETURNING concert_id
   ),
@@ -210,11 +206,9 @@ CALL pg_temp.test_expect_int(
       concert_id,
       place_row,
       place_num,
-      place_price,
-      place_sold,
-      place_age
+      place_price
     )
-    SELECT concert_id, 1, 1, 100.00, false, NULL FROM c
+    SELECT concert_id, 1, 1, 100.00 FROM c
   ),
   d AS (
     DELETE FROM concerts
@@ -225,6 +219,110 @@ CALL pg_temp.test_expect_int(
   WHERE concert_id = (SELECT concert_id FROM c)
   $$,
   0
+);
+CALL pg_temp.test_expect_error(
+  'Нарушен констрейнт NOT NULL для concert_id в отчёте',
+  $$INSERT INTO concert_reports(
+    concert_id,
+    event_date,
+    event_name,
+    event_form,
+    event_topic,
+    event_venue,
+    disability_accessibility,
+    responsible_person_fio,
+    leader_fio
+  )
+  VALUES (
+    NULL,
+    DATE '2026-06-01',
+    'Мероприятие',
+    'Концерт',
+    'Классическая музыка',
+    'Зал',
+    'Да',
+    'Иванов И.И.',
+    'Петров П.П.'
+  ) $$,
+  '23502'
+);
+CALL pg_temp.test_expect_error(
+  'Нарушен констрейнт FOREIGN KEY concert_reports.concert_id -> concerts.concert_id',
+  $$INSERT INTO concert_reports(
+    concert_id,
+    event_date,
+    event_name,
+    event_form,
+    event_topic,
+    event_venue,
+    disability_accessibility,
+    responsible_person_fio,
+    leader_fio
+  )
+  VALUES (
+    9999,
+    DATE '2026-06-01',
+    'Мероприятие',
+    'Концерт',
+    'Классическая музыка',
+    'Зал',
+    'Да',
+    'Иванов И.И.',
+    'Петров П.П.'
+  ) $$,
+  '23503'
+);
+CALL pg_temp.test_expect_error(
+  'Нарушен констрейнт - неотрицательное количество attendees (0-14)',
+  $$
+  WITH v AS (
+    INSERT INTO venues(venue_name, venue_location)
+    VALUES ('Test venue 2', 'Address 2')
+    RETURNING venue_id
+  ),
+  c AS (
+    INSERT INTO concerts(
+      concert_name,
+      concert_date,
+      concert_duration_minutes,
+      concert_level,
+      venue_id
+    )
+    SELECT
+      'Test concert',
+      DATE '2026-06-04',
+      60,
+      'Level',
+      venue_id
+    FROM v
+    RETURNING concert_id
+  )
+  INSERT INTO concert_reports(
+    concert_id,
+    event_date,
+    event_name,
+    event_form,
+    event_topic,
+    event_venue,
+    attendees_age_0_14,
+    disability_accessibility,
+    responsible_person_fio,
+    leader_fio
+  )
+  SELECT
+    concert_id,
+    DATE '2026-06-04',
+    'Мероприятие',
+    'Концерт',
+    'Классическая музыка',
+    'Зал',
+    -5,
+    'Да',
+    'Иванов И.И.',
+    'Петров П.П.'
+  FROM c
+  $$,
+  '23514'
 );
 SELECT *
 FROM test_results

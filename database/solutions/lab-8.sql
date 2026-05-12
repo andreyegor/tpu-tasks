@@ -153,6 +153,14 @@ CALL pg_temp.test_expect_error(
     '23514'
 );
 CALL pg_temp.test_expect_error(
+  'Нарушен консттрейнт - UNIQUE адрес',
+  $$INSERT INTO venues(venue_name, venue_location)
+  VALUES 
+    ('площадка 1', 'Какой-то адрес'),
+    ('площадка 2', 'Какой-то адрес') $$,
+  '23505'
+);
+CALL pg_temp.test_expect_error(
   'Нарушен констрейнт - запрещено удаление площадок с существующими концертами',
   $$
   INSERT INTO venues(venue_name, venue_location)

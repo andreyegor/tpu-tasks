@@ -1,9 +1,5 @@
 ---
 author: "Андреев Егор Сергеевич"
-format:
-  pdf:
-    include-in-header:
-      text: |
 mainfont: Liberation Serif
 sansfont: Liberation Sans
 monofont: Liberation Mono
@@ -24,6 +20,8 @@ header-includes:
   - \fancyfoot[R]{\thepage}
   - \renewcommand{\headrulewidth}{0pt}
   - \renewcommand{\footrulewidth}{0pt}
+  - \usepackage{siunitx}
+  - \newcommand{\angs}[3]{#1°#2′#3″}
 execute:
   echo: false
 ---
@@ -63,7 +61,7 @@ execute:
 
 \begin{tabular}{l l l}
 Выполнил: \\ 
-Cтудент группы 8к43 & Прядка Никита & 16.04.2026 \\
+Cтудент группы 8к43 & Андреев Егор & 16.04.2026 \\
 Проверил: \\
 Ассистент отделения экспериментальной физики (ИЯТШ): &  Калинич Иван \\
 \end{tabular}
@@ -274,107 +272,84 @@ $$
 
 ### Обработка результатов измерений
 
-#### Определение дисперсии вещества для коротковолнового и длинноволнового участков
+\subsection*{1.1. Определение параметров призмы}
+Преломляющий угол призмы $\alpha$ рассчитывается по формуле: $\alpha = \beta_{cp} / 2$.
+По данным Таблицы 1:
+\begin{equation*}
+    \beta_{cp} = \frac{\ang{125}{40} + \ang{125}{39} + \ang{125}{39}}{3} = \angs{125}{39}{20} \implies \alpha = \mathbf{\angs{62}{49}{40} \approx 62,8278^\circ}
+\end{equation*}
 
-Формула средней дисперсии на интервале:
+\subsection*{1.2. Расчет показателей преломления $n$}
+Расчет производится по формуле: $n = \sin((\alpha + \delta_{min})/2) / \sin(\alpha/2)$.
+Угол $\delta_{min}$ определяется как среднее отклонение для правой и левой граней относительно $\varphi_{0cp} = \angs{141}{24}{44}$.
 
-$$\frac{\Delta n}{\Delta \lambda} = \frac{n_2 - n_1}{\lambda_2 - \lambda_1}$$
+\textbf{Пример (Зеленая линия, 546 нм):}
+\begin{itemize}
+    \item $\delta_{min} = \angs{52}{29}{30} = 52,4917^\circ$
+    \item $n = \frac{\sin((62,8278 + 52,4917)/2)}{\sin(62,8278/2)} = \frac{0,8453}{0,5215} = \mathbf{1,6210}$
+\end{itemize}
 
-**Длинноволновой участок (интервал 670–577 нм):**
+\subsection*{1.3. Определение средней дисперсии вещества $\Delta n / \Delta \lambda$}
+\begin{itemize}
+    \item \textbf{Длинноволновой участок (670--577 нм):} 
+    $\left| \frac{\Delta n}{\Delta \lambda} \right| = \frac{1,6157 - 1,6118}{670 - 577} = 4,19 \cdot 10^{-5} \text{ нм}^{-1}$.
+    \item \textbf{Коротковолновой участок (436--405 нм):} 
+    $\left| \frac{\Delta n}{\Delta \lambda} \right| = \frac{1,6342 - 1,6286}{436 - 405} = 1,81 \cdot 10^{-4} \text{ нм}^{-1}$.
+\end{itemize}
 
-$\lambda_1 = 670$ нм, $n_1 = 1{,}6118$; $\lambda_2 = 577$ нм, $n_2 = 1{,}6157$.
+\subsection*{1.4. Угловая дисперсия $D$ и разрешающая способность $R$}
+Для зелёной линии расчетный коэффициент $K = \frac{2\sin(\alpha/2)}{\sqrt{1-n^2 \sin^2(\alpha/2)}} = 1,952$.
+\begin{itemize}
+    \item \textbf{Длинноволновой участок:} $D = 8,18 \cdot 10^{-6} \text{ рад/\AA}$, $R = 1257$.
+    \item \textbf{Коротковолновой участок:} $D = 3,53 \cdot 10^{-5} \text{ рад/\AA}$, $R = 5430$.
+\end{itemize}
 
-$$\frac{\Delta n}{\Delta \lambda} = \frac{1{,}6157 - 1{,}6118}{577 - 670} = \frac{0{,}0039}{-93} = -4{,}19 \cdot 10^{-5} \text{ нм}^{-1}$$
+\subsection*{1.5. Расчет погрешности (для зеленой линии)}
+Используя частные производные $\frac{\partial n}{\partial \delta} = 0,5122 \text{ рад}^{-1}$ и $\frac{\partial n}{\partial \alpha} = -0,8136 \text{ рад}^{-1}$ при $\Delta\delta = \Delta\alpha = 2,91 \cdot 10^{-4}$ рад:
+\begin{equation*}
+    \Delta n = \sqrt{(\Delta n_\delta)^2 + (\Delta n_\alpha)^2} = \mathbf{2,80 \cdot 10^{-4}}; \quad \varepsilon = \frac{\Delta n}{n} = \mathbf{0,0173\%}
+\end{equation*}
 
-$$\left|\frac{\Delta n}{\Delta \lambda}\right| = 4{,}19 \cdot 10^{-5} \text{ нм}^{-1}$$
+\begin{flushright} Таблица 1 \end{flushright}
+\begin{center}
+    \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    № оп. & $\varphi_1$ & $\varphi_2$ & $\beta$ & $\beta_{cp}$ & $\alpha$ \\ \hline
+    1 & \ang{74}{25} & \ang{200}{05} & \ang{125}{40} & \multirow{3}{*}{\angs{125}{39}{20}} & \multirow{3}{*}{\angs{62}{49}{40}} \\ \cline{1-4}
+    2 & \ang{74}{26} & \ang{200}{05} & \ang{125}{39} & & \\ \cline{1-4}
+    3 & \ang{74}{26} & \ang{200}{05} & \ang{125}{39} & & \\ \hline
+    \end{tabular}
+\end{center}
 
-**Коротковолновой участок (интервал 436–405 нм):**
+\begin{flushright} Таблица 2 \end{flushright}
+\begin{center}
+    \scriptsize
+    \setlength{\tabcolsep}{3pt}
+    \begin{tabular}{|c|c|c|c|c|c|c|c|}
+    \hline
+    Грань & $\varphi_{0cp}$ & Цвет линии & $\lambda$, нм & $\varphi_i$ & $\varphi_{min}$ & $\delta_{min}$ & $n$ \\ \hline
+    Прав. & \multirow{16}{*}{\makecell{\angs{141}{24}{44}}} & Красный & 670 & \ang{89}{30} & \angs{51}{54}{44} & \multirow{2}{*}{\angs{51}{28}{30}} & \multirow{2}{*}{1,6118} \\ \cline{1-1} \cline{3-6}
+    Лев. & & Красный & 670 & \ang{192}{27} & \angs{51}{02}{16} & & \\ \cline{1-1} \cline{3-8}
+    Прав. & & Желтый 1 & 579 & \ang{89}{14} & \angs{52}{10}{44} & \multirow{2}{*}{\angs{51}{56}{00}} & \multirow{2}{*}{1,6160} \\ \cline{1-1} \cline{3-6}
+    Лев. & & Желтый 1 & 579 & \ang{193}{06} & \angs{51}{41}{16} & & \\ \cline{1-1} \cline{3-8}
+    Прав. & & Желтый 2 & 577 & \ang{89}{18} & \angs{52}{06}{44} & \multirow{2}{*}{\angs{51}{54}{30}} & \multirow{2}{*}{1,6157} \\ \cline{1-1} \cline{3-6}
+    Лев. & & Желтый 2 & 577 & \ang{193}{07} & \angs{51}{42}{16} & & \\ \cline{1-1} \cline{3-8}
+    Прав. & & Зеленый & 546 & \ang{88}{18} & \angs{53}{06}{44} & \multirow{2}{*}{\angs{52}{29}{30}} & \multirow{2}{*}{1,6210} \\ \cline{1-1} \cline{3-6}
+    Лев. & & Зеленый & 546 & \ang{193}{17} & \angs{51}{52}{16} & & \\ \cline{1-1} \cline{3-8}
+    Прав. & & Т-зеленый & 538 & \ang{88}{18} & \angs{53}{06}{44} & \multirow{2}{*}{\angs{52}{40}{00}} & \multirow{2}{*}{1,6226} \\ \cline{1-1} \cline{3-6}
+    Лев. & & Т-зеленый & 538 & \ang{193}{38} & \angs{52}{13}{16} & & \\ \cline{1-1} \cline{3-8}
+    Прав. & & Голубой & 436 & \ang{87}{35} & \angs{53}{49}{44} & \multirow{2}{*}{\angs{53}{20}{30}} & \multirow{2}{*}{1,6286} \\ \cline{1-1} \cline{3-6}
+    Лев. & & Голубой & 436 & \ang{194}{16} & \angs{52}{51}{16} & & \\ \cline{1-1} \cline{3-8}
+    Прав. & & Синий & 430 & \ang{87}{30} & \angs{53}{54}{44} & \multirow{2}{*}{\angs{53}{30}{00}} & \multirow{2}{*}{1,6300} \\ \cline{1-1} \cline{3-6}
+    Лев. & & Синий & 430 & \ang{194}{30} & \angs{53}{05}{16} & & \\ \cline{1-1} \cline{3-8}
+    Прав. & & Фиолетовый & 405 & \ang{86}{39} & \angs{54}{45}{44} & \multirow{2}{*}{\angs{53}{59}{00}} & \multirow{2}{*}{1,6342} \\ \cline{1-1} \cline{3-6}
+    Лев. & & Фиолетовый & 405 & \ang{194}{37} & \angs{53}{12}{16} & & \\ \hline
+    \end{tabular}
+\end{center}
 
-$\lambda_1 = 436$ нм, $n_1 = 1{,}6286$; $\lambda_2 = 405$ нм, $n_2 = 1{,}6342$.
-
-$$\frac{\Delta n}{\Delta \lambda} = \frac{1{,}6342 - 1{,}6286}{405 - 436} = \frac{0{,}0056}{-31} = -1{,}81 \cdot 10^{-4} \text{ нм}^{-1}$$
-
-$$\left|\frac{\Delta n}{\Delta \lambda}\right| = 1{,}81 \cdot 10^{-4} \text{ нм}^{-1}$$
-
-#### Определение угловой дисперсии $D$ и разрешающей способности призмы $R$
-
-##### Угловая дисперсия
-
-Формула (для призмы с произвольным преломляющим углом $\alpha$):
-
-$$D = \frac{2\sin(\alpha/2)}{\sqrt{1 - n^2\sin^2(\alpha/2)}} \cdot \left|\frac{dn}{d\lambda}\right|$$
-
-Вычислим коэффициент $K = \dfrac{2\sin(\alpha/2)}{\sqrt{1 - n^2\sin^2(\alpha/2)}}$.
-
-Для зелёной линии ($\lambda = 546$ нм, $n = 1{,}6210$):
-
-$$\sin(\alpha/2) = \sin(31°24'50'') = 0{,}5215$$
-$$2\sin(\alpha/2) = 1{,}0430$$
-$$n^2\sin^2(\alpha/2) = (1{,}6210)^2 \cdot (0{,}5215)^2 = 2{,}6276 \cdot 0{,}2720 = 0{,}7147$$
-$$\sqrt{1 - 0{,}7147} = \sqrt{0{,}2853} = 0{,}5342$$
-$$K = \frac{1{,}0430}{0{,}5342} = 1{,}952$$
-
-**Для длинноволнового участка:**
-
-$$\left|\frac{dn}{d\lambda}\right| = 4{,}19\cdot10^{-5}\ \text{нм}^{-1}$$
-$$D = 1{,}952 \cdot 4{,}19\cdot10^{-5} = 8{,}18\cdot10^{-5}\ \text{рад/нм} = 8{,}18\cdot10^{-6}\ \text{рад/Å}$$
-
-**Для коротковолнового участка:**
-
-$$\left|\frac{dn}{d\lambda}\right| = 1{,}81\cdot10^{-4}\ \text{нм}^{-1}$$
-$$D = 1{,}952 \cdot 1{,}81\cdot10^{-4} = 3{,}53\cdot10^{-4}\ \text{рад/нм} = 3{,}53\cdot10^{-5}\ \text{рад/Å}$$
-
-##### Разрешающая способность $R$
-
-Формула (при полностью заполненном световом пучке):
-
-$$R = l \cdot \left|\frac{dn}{d\lambda}\right|$$
-
-**Для длинноволнового участка** ($\lambda \approx 577$ нм):
-
-$$R = 3\cdot10^{7} \cdot 4{,}19\cdot10^{-5} = 1257$$
-
-**Для коротковолнового участка** ($\lambda \approx 436$ нм):
-
-$$R = 3\cdot10^{7} \cdot 1{,}81\cdot10^{-4} = 5430$$
-
-#### Вычисление абсолютной и относительной погрешностей определения показателя преломления
-
-Инструментальная погрешность гониометра (цена деления отсчётного микроскопа — $1''$, однако в таблицах углы записаны с точностью до $1'$). Примем:
-
-$$\Delta\alpha = \Delta\delta = 1' = \frac{1}{60}° = 2{,}91\cdot10^{-4}\ \text{рад}$$
-
-Рассчитаем погрешность для зелёной линии ($\lambda = 546$ нм, $\delta_{\min} = 52°29'30'' = 52{,}4917°$).
-
-Формулы для частных производных:
-
-$$\frac{\partial n}{\partial \delta} = \frac{0{,}5\cdot\cos\!\left(\dfrac{\alpha+\delta}{2}\right)}{\sin(\alpha/2)}$$
-
-$$\frac{\partial n}{\partial \alpha} = \frac{0{,}5\cdot\cos\!\left(\dfrac{\alpha+\delta}{2}\right)\cdot\sin(\alpha/2) - 0{,}5\cdot\sin\!\left(\dfrac{\alpha+\delta}{2}\right)\cdot\cos(\alpha/2)}{\sin^2(\alpha/2)}$$
-
-Вычисления при $\alpha = 62{,}8278°$, $\delta = 52{,}4917°$:
-
-$$\frac{\alpha+\delta}{2} = \frac{62{,}8278 + 52{,}4917}{2} = 57{,}6598°$$
-$$\cos(57{,}6598°) = 0{,}5343, \quad \sin(57{,}6598°) = 0{,}8453$$
-$$\sin(\alpha/2) = \sin(31{,}4139°) = 0{,}5215, \quad \cos(\alpha/2) = \cos(31{,}4139°) = 0{,}8532$$
-
-$$\frac{\partial n}{\partial \delta} = \frac{0{,}5\cdot0{,}5343}{0{,}5215} = 0{,}5122\ \text{рад}^{-1}$$
-
-$$\frac{\partial n}{\partial \alpha} = \frac{0{,}5\cdot0{,}5343\cdot0{,}5215 - 0{,}5\cdot0{,}8453\cdot0{,}8532}{(0{,}5215)^2} = \frac{0{,}1393 - 0{,}3606}{0{,}2720} = -0{,}8136\ \text{рад}^{-1}$$
-
-Абсолютные погрешности:
-
-$$\Delta n_\delta = \left|\frac{\partial n}{\partial \delta}\right|\cdot\Delta\delta = 0{,}5122\cdot2{,}91\cdot10^{-4} = 1{,}49\cdot10^{-4}$$
-$$\Delta n_\alpha = \left|\frac{\partial n}{\partial \alpha}\right|\cdot\Delta\alpha = 0{,}8136\cdot2{,}91\cdot10^{-4} = 2{,}37\cdot10^{-4}$$
-
-Суммарная абсолютная погрешность:
-
-$$\Delta n = \sqrt{(\Delta n_\alpha)^2 + (\Delta n_\delta)^2} = \sqrt{(2{,}37\cdot10^{-4})^2 + (1{,}49\cdot10^{-4})^2}$$
-$$= \sqrt{5{,}62\cdot10^{-8} + 2{,}22\cdot10^{-8}} = \sqrt{7{,}84\cdot10^{-8}} = 2{,}80\cdot10^{-4}$$
-
-Относительная погрешность:
-
-$$\varepsilon = \frac{\Delta n}{n} = \frac{2{,}80\cdot10^{-4}}{1{,}6210} = 1{,}73\cdot10^{-4} = 0{,}0173\%$$
+![](Figure_1.png)
 
 ### Вывод
+В ходе работы была исследована дисперсия света в стеклянной призме. Полученные данные подтверждают наличие \textbf{нормальной дисперсии} ($n$ растет при уменьшении $\lambda$). Установлено, что разрешающая способность $R$ и угловая дисперсия $D$ максимальны в коротковолновой области спектра. Относительная погрешность измерений составила менее 0,02\%, что свидетельствует о высокой точности эксперимента.
+
 

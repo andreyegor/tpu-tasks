@@ -1,0 +1,3 @@
+[submodule "web/ono-tebe-nado-ad"]
+	path = web/ono-tebe-nado-ad
+	url = https://github.com/andreyegor-yandex-praktikum/ono-tebe-nado-ad.git
